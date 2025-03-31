@@ -1,9 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from apps.catalog.models import Product
 from uuid import uuid4
+
+
+User = get_user_model()
 
 
 class Cart(models.Model):
