@@ -14,12 +14,11 @@ User = get_user_model()
 class Order(models.Model):
     """Заказ"""
 
-    STATUS_CHOICES = [
-        ("new", "Новый"),
-        ("processing", "В обработке"),
-        ("completed", "Завершён"),
-        ("cancelled", "Отменён"),
-    ]
+    class Status(models.TextChoices):
+        NEW = "new", "Новый"
+        PROCESSING = "processing", "В обработке"
+        COMPLETED = "completed", "Завершён"
+        CANCELLED = "cancelled", "Отменён"
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     cart = models.OneToOneField(Cart, on_delete=models.PROTECT, verbose_name="Корзина")
@@ -28,8 +27,8 @@ class Order(models.Model):
     email = models.EmailField(null=True, blank=True, verbose_name="Email")
     status = models.CharField(
         max_length=20,
-        choices=STATUS_CHOICES,
-        default="new",
+        choices=Status.choices,
+        default=Status.NEW,
         verbose_name="Статус заказа",
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создан")

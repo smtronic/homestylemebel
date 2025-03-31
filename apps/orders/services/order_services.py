@@ -20,7 +20,7 @@ class OrderService:
             full_name=contact_data["full_name"],
             phone=contact_data["phone"],
             email=contact_data.get("email"),
-            status=Order.STATUS_NEW,
+            status=Order.Status.NEW,
         )
         order_items = OrderItem.objects.bulk_create_from_cart(
             order, cart.items.select_related("product")
@@ -63,10 +63,10 @@ class OrderService:
     @staticmethod
     def cancel_order(order, reason=None):
         """Отмена заказа с возвратом товаров на склад"""
-        if order.status == Order.STATUS_CANCELLED:
+        if order.status == Order.Status.CANCELLED:
             raise ValidationError("Заказ уже отменен")
 
-        if order.status == Order.STATUS_COMPLETED:
+        if order.status == Order.Status.COMPLETED:
             raise ValidationError("Нельзя отменить завершенный заказ")
 
         with transaction.atomic():
@@ -74,7 +74,7 @@ class OrderService:
                 Product.objects.filter(pk=item.product.pk).update(
                     stock=models.F("stock") + item.quantity
                 )
-            order.status = Order.STATUS_CANCELLED
+            order.status = Order.Status.CANCELLED
             if reason:
                 order.notes = f"Причина отмены: {reason}"
             order.save()
