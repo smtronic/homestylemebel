@@ -21,7 +21,7 @@ class Order(models.Model):
         CANCELLED = "cancelled", "Отменён"
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    cart = models.OneToOneField(Cart, on_delete=models.PROTECT, verbose_name="Корзина")
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE, verbose_name="Корзина")
     full_name = models.CharField(max_length=255, verbose_name="ФИО")
     phone = PhoneNumberField(region="RU", unique=False, verbose_name="Контактный номер")
     email = models.EmailField(null=True, blank=True, verbose_name="Email")

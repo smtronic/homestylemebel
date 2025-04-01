@@ -32,9 +32,6 @@ class OrderService:
                 stock=models.F("stock") - cart_item.quantity
             )
 
-        cart.items.all().delete()
-        cart.delete()
-
         return order
 
     @staticmethod
