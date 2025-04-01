@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CartConfig(AppConfig):
+class Users(AppConfig):
     # default_auto_field = "django.db.models.UUIDField"
-    name = "apps.cart"
+    name = "apps.users"
