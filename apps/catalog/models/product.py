@@ -90,7 +90,7 @@ class ProductExtraImage(BaseModel):
     """
 
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="images"
+        Product, on_delete=models.CASCADE, related_name="extra_images"
     )
     image = models.ImageField(upload_to="catalog/products/extra/")
     ordering = models.PositiveIntegerField(
