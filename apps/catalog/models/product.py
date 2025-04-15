@@ -1,16 +1,22 @@
+from decimal import Decimal
 from django.urls import reverse
 from apps.catalog.models.base import BaseModel
 from apps.catalog.models.category import Category
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from apps.catalog.services.product_services import ProductServices
 from apps.catalog.models.managers import ProductManager
+from apps.catalog.services.product_services import ProductServices
 
 
 class Product(BaseModel):
     """
     Модель товара.
     """
+
+    class Availability(models.TextChoices):
+        IN_STOCK = "in_stock", "В наличии"
+        BACKORDER = "backorder", "Под заказ"
+        UNAVAILABLE = "unavailable", "Недоступен"
 
     name = models.CharField("Название", max_length=200)
     sku = models.CharField("Артикул", max_length=50, unique=True)
@@ -29,6 +35,24 @@ class Product(BaseModel):
         upload_to="catalog/products/main/",
         default="catalog/default.png",
     )
+    _actual_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        editable=False,
+        verbose_name="Цена со скидкой",
+        default=Decimal("0.00"),
+    )
+    available_for_order = models.BooleanField(
+        "Доступен к заказу", default=True, db_index=True
+    )
+    availability_status = models.CharField(
+        "Статус наличия",
+        max_length=20,
+        choices=Availability.choices,
+        default=Availability.IN_STOCK,
+        db_index=True,
+        editable=False,
+    )
 
     objects = ProductManager()
 
@@ -40,6 +64,9 @@ class Product(BaseModel):
             models.Index(fields=["slug"], name="product_slug_idx"),
             models.Index(fields=["sku"], name="product_sku_idx"),
             models.Index(fields=["price"], name="product_price_idx"),
+            models.Index(
+                fields=["availability_status", "stock"], name="availability_idx"
+            ),
         ]
 
     def __str__(self):
@@ -50,15 +77,10 @@ class Product(BaseModel):
 
     @property
     def actual_price(self):
-        return round(self.price * (100 - self.discount) / 100, 2)
-
-    def clean(self, *args, **kwargs):
-        self.name = self.name.strip().capitalize()
-        self.sku = self.sku.strip()
-        ProductServices.update_product_slug(self)
+        return self._actual_price
 
     def save(self, *args, **kwargs):
-        self.clean()
+        ProductServices.prepare_for_save(self)
         super().save(*args, **kwargs)
 
 
@@ -82,8 +104,7 @@ class ProductExtraImage(BaseModel):
         return f"Доп. изображение {self.id} для {self.product.name}"
 
     def clean(self):
-        """
-        Устанавливает `ordering`, если он не задан, и предотвращает конфликты.
-        """
-        if not self.ordering:  # Если ordering = 0 или None
+        if not self.ordering:
+            from apps.catalog.services.product_services import ProductServices
+
             self.ordering = ProductServices.get_next_image_order(self.product)

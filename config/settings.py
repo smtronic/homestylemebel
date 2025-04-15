@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     "apps.catalog",
     "apps.orders",
     "apps.cart",
+    "rest_framework",
+    "django_extensions",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -136,3 +139,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 3600
 # SESSION_COOKIE_SECURE = True # для продакшена
+
+REST_FRAMEWORK = {
+    "COERCE_DECIMAL_TO_STRING": True,
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+        "rest_framework.filters.SearchFilter",
+    ],
+}
