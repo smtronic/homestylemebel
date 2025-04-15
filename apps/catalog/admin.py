@@ -1,5 +1,6 @@
 from django.contrib import admin
 from apps.catalog.models import Category, Product, ProductExtraImage
+from apps.catalog.forms import ProductForm
 
 
 class ProductImageInline(admin.TabularInline):
@@ -18,11 +19,21 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "sku",
+        "price",
+        "stock",
+        "availability_status",
+        "available_for_order",
+    )
+    form = ProductForm
     fields = (
         "name",
         "sku",
         "price",
         "discount",
+        "_actual_price",
         "stock",
         "category",
         "main_image",
@@ -30,11 +41,18 @@ class ProductAdmin(admin.ModelAdmin):
         "slug",
         "created_at",
         "updated_at",
+        "available_for_order",
+        "availability_status",
     )
     autocomplete_fields = ["category"]
-    list_filter = ("category", "discount", "stock")
+    list_filter = ("category", "discount", "stock", "availability_status")
     search_fields = ("name", "description")
-    # prepopulated_fields = {"slug": ("name", "sku")}
-    readonly_fields = ("created_at", "updated_at", "slug")
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+        "slug",
+        "_actual_price",
+        "availability_status",
+    )
 
     inlines = [ProductImageInline]
