@@ -1,0 +1,19 @@
+-r base.txt
+
+# Dev tools
+django-extensions==3.2.3
+
+# Testing
+pytest==8.3.5
+pytest-django==4.11.1
+pytest-factoryboy==2.7.0
+pytest-mock==3.14.0
+factory_boy==3.3.3
+Faker==37.1.0
+
+# Utils
+inflection==0.5.1
+iniconfig==2.1.0
+packaging==24.2
+pluggy==1.5.0
+typing_extensions==4.13.2
