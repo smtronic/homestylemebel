@@ -1,197 +1,198 @@
-# База данных
+# Database Schema
 
-## ER-диаграмма
+## ER Diagram
 ![ER Diagram](image/er_diagram.png)
 
-## Основные таблицы
-
-### Пользователи (`users_user`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `email`        | `VARCHAR(255)`    | `UNIQUE`, `INDEX`                      | Уникальный email (используется для аутентификации)                       |
-| `phone`        | `PhoneNumberField`| `INDEX (частичный)`                    | Номер телефона в формате +7XXXXXXXXXX (неуникальный, регион: RU)         |
-| `first_name`   | `VARCHAR(255)`    | `BLANK=True`                           | Имя пользователя                                                         |
-| `last_name`    | `VARCHAR(255)`    | `BLANK=True`                           | Фамилия пользователя                                                     |
-| `is_active`    | `BOOLEAN`         | `DEFAULT=True`                         | Статус активности                                                        |
-| `is_staff`     | `BOOLEAN`         | `DEFAULT=False`                        | Доступ к админке                                                         |
-| `is_superuser` | `BOOLEAN`         | `DEFAULT=False`                        | Суперпользователь (наследуется из `PermissionsMixin`)                    |
-| `date_joined`  | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата регистрации                                                         |
-| `password`     | `VARCHAR(128)`    | `NOT NULL`                             | Хэшированный пароль (наследуется из `AbstractBaseUser`)                  |
-| `last_login`   | `TIMESTAMP`       | `NULL=True`                            | Дата последней авторизации                                               |
-
 ---
-### Категории (`catalog_category`)
-| Поле         | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|--------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`         | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `name`       | `VARCHAR(100)`    | `UNIQUE`                               | Название категории (автоматически капитализируется при сохранении)       |
-| `slug`       | `VARCHAR(150)`    | `UNIQUE`                               | ЧПУ-идентификатор (генерируется автоматически из названия)               |
-| `image`      | `VARCHAR(255)`    | `DEFAULT="catalog/default.png"`        | Путь к изображению категории                                             |
-| `description`| `TEXT`            | `NULL=True`                            | Описание категории                                                       |
-| `created_at` | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата создания (автоматически заполняется)                                |
-| `updated_at` | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата последнего обновления (автоматически обновляется)                   |
 
-**Особенности:**
-- **Автоматическая генерация `slug`:**
-  Значение `slug` создаётся из названия категории через транслитерацию (например, "Мебель для гостиной" → `mebel-dlya-gostinoy`).
-- **Капитализация названия:**
-  Поле `name` автоматически приводится к формату с заглавной буквы (например, "стулья" → "Стулья").
-- **Сортировка:**
-  Категории упорядочены по алфавиту (`ordering = ["name"]`).
+## Main Tables
 
+### Users (`users_user`)
 
-### Товары (`catalog_product`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `name`         | `VARCHAR(200)`    |                                        | Название товара (автоматически капитализируется при сохранении)          |
-| `sku`          | `VARCHAR(50)`     | `UNIQUE`, `INDEX`                      | Артикул товара (например, `PROD-001`)                                    |
-| `price`        | `DECIMAL(10,2)`   | `INDEX`, `CHECK (>= 0)`                | Базовая цена (используется для расчета `actual_price`)                   |
-| `discount`     | `SMALLINT`        | `DEFAULT=0`, `CHECK (0 <= discount <= 100)` | Скидка в процентах (автоматически рассчитывает `actual_price`)           |
-| `stock`        | `INT`             | `DEFAULT=0`, `CHECK (>= 0)`            | Остаток на складе                                                        |
-| `category_id`  | `UUID`            | `FK (catalog_category), NULL=True`     | Связь с категорией (при удалении категории — NULL)                       |
-| `main_image`   | `VARCHAR(255)`    | `DEFAULT="catalog/default.png"`        | Путь к основному изображению                                             |
-| `slug`         | `VARCHAR(150)`    | `UNIQUE`, `INDEX`                      | ЧПУ-идентификатор (генерируется из `name` и `sku`)                       |
-| `description`  | `TEXT`            | `NULL=True`                            | Описание товара (наследуется из `BaseModel`)                             |
-| `created_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата создания (автоматически заполняется)                                |
-| `updated_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата последнего обновления (автоматически обновляется)                   |
-
-**Особенности:**
-- **Автоматическая генерация `slug`:**
-  Значение `slug` создаётся из `name` и `sku` через транслитерацию (например, "Стул деревянный (STL-001)" → `stul-derevyannyi-stl-001`).
-- **Расчет `actual_price`:**
-  `actual_price = price * (100 - discount) / 100` (округляется до 2 знаков).
-- **Индексы:**
-  Для полей `sku`, `price`, `slug` созданы отдельные индексы для ускорения поиска.
+| Field          | Type               | Constraints/Indexes                        | Description                                                                 |
+|----------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`           | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `email`        | `VARCHAR(255)`     | `UNIQUE`, `INDEX`                         | Unique email (used for authentication)                                      |
+| `phone`        | `PhoneNumberField` | `INDEX (partial)`                         | Phone number in the format +7XXXXXXXXXX (non-unique, region: RU)            |
+| `first_name`   | `VARCHAR(255)`     | `BLANK=True`                              | User's first name                                                            |
+| `last_name`    | `VARCHAR(255)`     | `BLANK=True`                              | User's last name                                                             |
+| `is_active`    | `BOOLEAN`          | `DEFAULT=True`                            | Active status                                                                |
+| `is_staff`     | `BOOLEAN`          | `DEFAULT=False`                           | Staff access to the admin panel                                              |
+| `is_superuser` | `BOOLEAN`          | `DEFAULT=False`                           | Superuser (inherits from `PermissionsMixin`)                                  |
+| `date_joined`  | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Date when the user registered                                                |
+| `password`     | `VARCHAR(128)`     | `NOT NULL`                                | Hashed password (inherits from `AbstractBaseUser`)                           |
+| `last_login`   | `TIMESTAMP`        | `NULL=True`                               | Last login time                                                               |
 
 ---
 
-### Доп. изображения (`catalog_productextraimage`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `product_id`   | `UUID`            | `FK (catalog_product)`                 | Связь с товаром                                                          |
-| `image`        | `VARCHAR(255)`    |                                        | Путь к дополнительному изображению                                       |
-| `ordering`     | `INT`             | `DEFAULT=0`, `CHECK (>= 0)`            | Порядок отображения (автоматически увеличивается при добавлении)         |
-| `created_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата создания (наследуется из `BaseModel`)                               |
-| `updated_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата последнего обновления (наследуется из `BaseModel`)                  |
+### Categories (`catalog_category`)
 
-**Особенности:**
-- **Автоматический порядок изображений:**
-  Если `ordering` не указан, присваивается значение `последний_ordering + 1`.
-- **Сортировка:**
-  Изображения упорядочены по полю `ordering` (от меньшего к большему).
-### Корзина (`cart_cart`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `user`         | `UUID`            | `FK (users_user), NULL=True`           | Связь с пользователем (NULL для анонимов)                                |
-| `session_key`  | `VARCHAR(40)`     | `NULL=True`                            | Ключ сессии для анонимных пользователей                                  |
-| `created_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата создания корзины                                                    |
-| `updated_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата последнего обновления                                               |
-| **Ограничение**|                   | `CHECK (user IS NOT NULL OR session_key IS NOT NULL)` | Гарантирует наличие либо пользователя, либо сессии                       |
+| Field         | Type               | Constraints/Indexes                        | Description                                                                 |
+|---------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`          | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `name`        | `VARCHAR(100)`     | `UNIQUE`                                  | Category name (auto-capitalized upon saving)                                |
+| `slug`        | `VARCHAR(150)`     | `UNIQUE`                                  | Slug identifier (automatically generated from name)                         |
+| `image`       | `VARCHAR(255)`     | `DEFAULT="catalog/default.png"`           | Path to the category image                                                   |
+| `description` | `TEXT`             | `NULL=True`                               | Description of the category                                                  |
+| `created_at`  | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Creation date                                                                |
+| `updated_at`  | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Last update date                                                             |
 
-**Особенности:**
-- **Автоматическая привязка:**
-  Для анонимов используется `session_key`, для авторизованных — `user`.
-- **Метод `total`:**
-  Рассчитывает общую сумму корзины: `sum(item.total_price for item in items.all())`.
+**Features:**
+- **Auto-generate `slug`:** The `slug` field is generated automatically from the `name` field (e.g., "Living Room Furniture" → `living-room-furniture`).
+- **Auto-capitalize `name`:** The `name` field is capitalized automatically (e.g., "chairs" → "Chairs").
+- **Ordering:** Categories are ordered alphabetically (`ordering = ["name"]`).
 
 ---
 
-### Товары корзины (`cart_cartitem`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `cart`         | `UUID`            | `FK (cart_cart)`                       | Связь с корзиной                                                         |
-| `product`      | `UUID`            | `FK (catalog_product)`                 | Связь с товаром                                                          |
-| `quantity`     | `INT`             | `>=1`                                  | Количество товара                                                        |
-| `price`        | `DECIMAL(10,2)`   |                                       | Цена товара на момент добавления в корзину                               |
-| **Ограничение**|                   | `UNIQUE (cart, product)`               | Запрещает дублирование товаров в одной корзине                           |
+### Products (`catalog_product`)
 
-**Особенности:**
-- **Проверка остатков:**
-  При сохранении проверяется, что `quantity <= product.stock`.
-- **Автоматическая установка цены:**
-  Если `price` не указан, используется `product.actual_price`.
-- **Метод `total_price`:**
-  Рассчитывает стоимость позиции: `price * quantity` (округляется до 2 знаков).
+| Field               | Type               | Constraints/Indexes                        | Description                                                                 |
+|---------------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`                | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `name`              | `VARCHAR(200)`     |                                           | Product name (auto-capitalized upon saving)                                 |
+| `sku`               | `VARCHAR(50)`      | `UNIQUE`, `INDEX`                         | Product SKU (e.g., `PROD-001`)                                               |
+| `price`             | `DECIMAL(10,2)`    | `INDEX`, `CHECK (>= 0)`                   | Base price (used to calculate `actual_price`)                               |
+| `discount`          | `SMALLINT`         | `DEFAULT=0`, `CHECK (0 <= discount <= 100)` | Discount percentage (automatically calculates `actual_price`)               |
+| `stock`             | `INT`              | `DEFAULT=0`, `CHECK (>= 0)`               | Stock quantity                                                              |
+| `category_id`       | `UUID`             | `FK (catalog_category), NULL=True`         | Foreign key to Category (set to NULL if Category is deleted)                |
+| `main_image`        | `VARCHAR(255)`     | `DEFAULT="catalog/default.png"`           | Path to the main product image                                               |
+| `slug`              | `VARCHAR(150)`     | `UNIQUE`, `INDEX`                         | Slug identifier (generated from `name` and `sku`)                           |
+| `description`       | `TEXT`             | `NULL=True`                               | Product description                                                          |
+| `created_at`        | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Product creation date                                                        |
+| `updated_at`        | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Product last update date                                                     |
+| `available_for_order` | `BOOLEAN`        | `DEFAULT=True`, `DB_INDEX=True`           | Available for order flag (indexed)                                           |
+| `_actual_price`     | `DECIMAL(10,2)`    | `EDITABLE=False`, `DEFAULT=0.00`          | Price after discount (calculated automatically)                             |
+| `availability_status` | `VARCHAR(20)`     | `DB_INDEX=True`, `EDITABLE=False`         | Availability status (`in_stock`, `backorder`, `unavailable`)                |
 
----
-### Заказы (`orders_order`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `cart`         | `UUID`            | `OneToOne (cart_cart)`                 | Связанная корзина (удаляется при удалении заказа)                        |
-| `full_name`    | `VARCHAR(255)`    |                                        | ФИО получателя                                                           |
-| `phone`        | `PhoneNumberField`| `INDEX (частичный)`                    | Контактный номер (формат: +7XXXXXXXXXX)                                  |
-| `email`        | `VARCHAR(255)`    | `NULL=True`                            | Контактный email (опционально)                                           |
-| `status`       | `VARCHAR(20)`     | `ENUM: new, processing, completed, cancelled` | Статус заказа (по умолчанию: `new`)                              |
-| `created_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата создания                                                             |
-| `updated_at`   | `TIMESTAMP`       | `DEFAULT=timezone.now`                 | Дата последнего обновления                                               |
-
-**Особенности:**
-- **Связь с корзиной:**
-  Используется `OneToOneField` для строгой связи с корзиной (`on_delete=models.Cascade`  удаление корзины при оформлении заказа).
-- **Метод `total`:**
-  Рассчитывает общую стоимость: `sum(item.total_price for item in items.all())`.
-- **Статусы:**
-  - `new` — заказ создан, но не обработан
-  - `processing` — в работе
-  - `completed` — завершён
-  - `cancelled` — отменён
+**Features:**
+- **Auto-generate `slug`:** The `slug` is generated from `name` and `sku` using transliteration (e.g., "Wooden Chair (STL-001)" → `wooden-chair-stl-001`).
+- **Actual Price Calculation:** `actual_price = price * (100 - discount) / 100` (rounded to 2 decimal places).
+- **Indexes:** Separate indexes are created for `sku`, `price`, and `slug` to speed up searching.
 
 ---
 
-### Товары заказа (`orders_orderitem`)
-| Поле           | Тип               | Ограничения/Индексы                     | Описание                                                                 |
-|----------------|-------------------|----------------------------------------|--------------------------------------------------------------------------|
-| `id`           | `UUID`            | `PK`                                   | Первичный ключ                                                           |
-| `order`        | `UUID`            | `FK (orders_order)`                    | Связь с заказом                                                          |
-| `product`      | `UUID`            | `FK (catalog_product)`                 | Связь с товаром                                                          |
-| `quantity`     | `INT`             | `>=1`                                  | Количество товара                                                        |
-| `price`        | `DECIMAL(10,2)`   |                                        | Цена товара на момент оформления заказа                                  |
-| **Ограничение**|                   | `UNIQUE (order, product)`              | Запрещает дублирование товаров в одном заказе                            |
+### Product Extra Images (`catalog_productextraimage`)
 
-**Особенности:**
-- **Проверка остатков:**
-  При сохранении проверяется, что `quantity <= product.stock`.
-- **Автоматическая установка цены:**
-  Если `price` не указан, используется `product.actual_price`.
-- **Метод `total_price`:**
-  Рассчитывает стоимость позиции: `price * quantity` (округляется до 2 знаков).
+| Field          | Type               | Constraints/Indexes                        | Description                                                                 |
+|----------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`           | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `product_id`   | `UUID`             | `FK (catalog_product)`                    | Foreign key to the Product                                                  |
+| `image`        | `VARCHAR(255)`     |                                           | Path to the additional product image                                         |
+| `ordering`     | `INT`              | `DEFAULT=0`, `CHECK (>= 0)`               | Display order (automatically increases when new images are added)            |
+| `created_at`   | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Image creation date                                                          |
+| `updated_at`   | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Image last update date                                                       |
+
+**Features:**
+- **Auto-increment `ordering`:** If `ordering` is not specified, it is automatically set to the next available order.
+- **Sorting:** Images are sorted by the `ordering` field (ascending).
 
 ---
 
-## Бизнес-логика
-### Обработка заказов
-1. **Сервис `OrderService`:**
+### Cart (`cart_cart`)
+
+| Field          | Type               | Constraints/Indexes                        | Description                                                                 |
+|----------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`           | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `user`         | `UUID`             | `FK (users_user), NULL=True`              | Foreign key to the User (NULL for anonymous users)                           |
+| `session_key`  | `VARCHAR(40)`      | `NULL=True`                               | Session key for anonymous users                                              |
+| `created_at`   | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Cart creation date                                                           |
+| `updated_at`   | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Cart last update date                                                        |
+
+**Features:**
+- **Auto-linking:** For anonymous users, `session_key` is used; for authenticated users, `user` is used.
+- **`total`:** Calculates the total price of the cart: `sum(item.total_price for item in items.all())`.
+
+---
+
+### Cart Item (`cart_cartitem`)
+
+| Field          | Type               | Constraints/Indexes                        | Description                                                                 |
+|----------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`           | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `cart`         | `UUID`             | `FK (cart_cart)`                          | Foreign key to the Cart                                                     |
+| `product`      | `UUID`             | `FK (catalog_product)`                    | Foreign key to the Product                                                  |
+| `quantity`     | `INT`              | `>=1`                                     | Product quantity                                                            |
+| `price`        | `DECIMAL(10,2)`    |                                           | Price of the product at the time of adding to the cart                      |
+
+**Features:**
+- **Stock validation:** Ensures that `quantity <= product.stock` when saving.
+- **Automatic price assignment:** If `price` is not provided, `product.actual_price` is used.
+- **`total_price`:** Calculates the total price of an item: `price * quantity`.
+
+---
+
+### Orders (`orders_order`)
+
+| Field          | Type               | Constraints/Indexes                        | Description                                                                 |
+|----------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`           | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `cart`         | `UUID`             | `OneToOne (cart_cart)`                    | One-to-one relation with Cart                                               |
+| `full_name`    | `VARCHAR(255)`     |                                           | Recipient's full name                                                       |
+| `phone`        | `PhoneNumberField` | `INDEX (partial)`                         | Contact phone number                                                         |
+| `email`        | `VARCHAR(255)`     | `NULL=True`                               | Contact email (optional)                                                    |
+| `status`       | `VARCHAR(20)`      | `ENUM: new, processing, completed, cancelled` | Order status (`new` by default)                                             |
+| `created_at`   | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Order creation date                                                          |
+| `updated_at`   | `TIMESTAMP`        | `DEFAULT=timezone.now`                    | Last update date                                                             |
+
+**Features:**
+- **One-to-one with Cart:** This creates a strict relationship with a cart (`on_delete=models.Cascade` to delete the cart when the order is deleted).
+- **`total`:** Calculates the total price of the order: `sum(item.total_price for item in items.all())`.
+- **Statuses:**
+  - `new` — Order is created but not processed
+  - `processing` — Order is being processed
+  - `completed` — Order is completed
+  - `cancelled` — Order is cancelled
+
+---
+
+### Order Item (`orders_orderitem`)
+
+| Field          | Type               | Constraints/Indexes                        | Description                                                                 |
+|----------------|--------------------|-------------------------------------------|-----------------------------------------------------------------------------|
+| `id`           | `UUID`             | `PK`                                      | Primary Key                                                                 |
+| `order`        | `UUID`             | `FK (orders_order)`                       | Foreign key to the Order                                                    |
+| `product`      | `UUID`             | `FK (catalog_product)`                    | Foreign key to the Product                                                  |
+| `quantity`     | `INT`              | `>=1`                                     | Product quantity                                                            |
+| `price`        | `DECIMAL(10,2)`    |                                           | Price of the product at the time of the order                               |
+
+**Features:**
+- **Stock validation:** Ensures that `quantity <= product.stock` when saving.
+- **Automatic price assignment:** If `price` is not provided, `product.actual_price` is used.
+- **`total_price`:** Calculates the total price of an item: `price * quantity`.
+
+---
+
+## Business Logic
+
+### Order Processing
+
+1. **`OrderService`:**
    - **`create_order_from_cart`:**
-     - Создаёт заказ из корзины с проверкой остатков.
-     - Уменьшает `stock` товаров в каталоге.
-     - Удаляет корзину после успешного создания заказа.
+     - Creates an order from the cart with stock validation.
+     - Decreases the `stock` of products in the catalog.
+     - Deletes the cart after successful order creation.
    - **`cancel_order`:**
-     - Возвращает товары на склад при отмене.
-     - Запрещена отмена завершённых заказов.
+     - Returns products to the stock if the order is cancelled.
+     - Cancellation of completed orders is not allowed.
 
-2. **Транзакции:**
-   Методы `create_order_from_cart` и `cancel_order` выполняются в атомарных транзакциях.
+2. **Transactions:**
+   Methods like `create_order_from_cart` and `cancel_order` are executed in atomic transactions to ensure data integrity.
 
-3. **Валидации:**
-   - Запрет создания заказа с пустой корзиной.
-   - Проверка доступного количества товаров перед оформлением.
+3. **Validations:**
+   - Prevent creating an order with an empty cart.
+   - Check available product quantities before placing an order.
 
-### Работа с корзиной
-1. **Сервис `CartService`:**
+### Working with Cart
+
+1. **`CartService`:**
    - **`get_or_create_cart(request)`:**
-     Создаёт корзину для анонимов/авторизованных пользователей.
+     Creates a cart for anonymous or authenticated users.
    - **`add_to_cart(cart, product, quantity)`:**
-     Добавляет товар в корзину с проверкой остатков. Если товар уже есть — увеличивает количество.
+     Adds a product to the cart with stock validation. If the product is already in the cart, the quantity is increased.
 
-2. **Валидации:**
-   - В `CartItem` запрещено сохранение, если `quantity > product.stock`.
-   - В `Cart` запрещено сохранение, если отсутствуют и `user`, и `session_key`.
+2. **Validations:**
+   - In `CartItem`, `quantity > product.stock` is not allowed.
+   - In `Cart`, either `user` or `session_key` must be set.
 
-3. **Транзакции:**
-   Метод `add_to_cart` выполняется в атомарной транзакции для обеспечения целостности данных.
+3. **Transactions:**
+   The `add_to_cart` method is executed within an atomic transaction to ensure data consistency.
