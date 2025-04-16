@@ -17,3 +17,11 @@ iniconfig==2.1.0
 packaging==24.2
 pluggy==1.5.0
 typing_extensions==4.13.2
+
+# Linting & Formatting
+flake8==7.0.0
+black==25.1.0
+isort==5.13.2
+
+# Diagram tools
+pygraphviz==1.14
