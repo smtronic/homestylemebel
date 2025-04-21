@@ -5,7 +5,6 @@ from django.core.validators import MinValueValidator
 from apps.catalog.models import Product
 from uuid import uuid4
 
-
 User = get_user_model()
 
 
@@ -39,13 +38,6 @@ class Cart(models.Model):
             )
         ]
 
-    def clean(self):
-        """Валидация корзины"""
-        if not self.user and not self.session_key:
-            raise ValidationError(
-                "Корзина должна быть привязана к пользователю или сессии"
-            )
-
     @property
     def total(self):
         """Итоговая сумма корзины"""
@@ -64,9 +56,7 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
     quantity = models.PositiveIntegerField(
         default=1,
-        validators=[
-            MinValueValidator(1),  # Минимальное количество 1
-        ],
+        validators=[MinValueValidator(1)],  # Минимальное количество 1
     )
     price = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Цена на момент добавления"
@@ -81,24 +71,10 @@ class CartItem(models.Model):
             )
         ]
 
-    def clean(self):
-        """Проверки для товара в корзине"""
-        # Проверка на наличие достаточного количества товара в наличии
-        if self.quantity > self.product.stock:
-            raise ValidationError(
-                f"Недостаточно товара '{self.product.name}' на складе. Остаток: {self.product.stock}."
-            )
-        if not self.price:
-            self.price = self.product.actual_price
-
     @property
     def total_price(self):
         """Сумма по позиции с округлением"""
         return round(self.price * self.quantity, 2)
-
-    def save(self, *args, **kwargs):
-        self.clean()  # Валидация перед сохранением
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.product.name} × {self.quantity}"
