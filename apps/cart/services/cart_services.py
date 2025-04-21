@@ -59,3 +59,4 @@ class CartService:
         """
         Get the total sum of the cart.
         """
+        return round(sum(item.total_price for item in cart.items.all()), 2)
