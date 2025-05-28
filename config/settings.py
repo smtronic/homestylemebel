@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -142,9 +143,17 @@ SESSION_COOKIE_AGE = 3600
 
 REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": True,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.OrderingFilter",
         "rest_framework.filters.SearchFilter",
     ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Homestyle Mebel API",
+    "DESCRIPTION": "E-commerce API for catalog, cart, and orders.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
