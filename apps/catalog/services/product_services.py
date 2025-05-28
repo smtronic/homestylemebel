@@ -1,8 +1,9 @@
 import logging
 from decimal import Decimal
-from pytils.translit import slugify
+
 from django.core.exceptions import ValidationError
 from django.db import models
+from pytils.translit import slugify
 
 logger = logging.getLogger(__name__)
 

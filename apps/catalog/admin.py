@@ -1,6 +1,7 @@
 from django.contrib import admin
-from apps.catalog.models import Category, Product, ProductExtraImage
+
 from apps.catalog.forms import ProductForm
+from apps.catalog.models import Category, Product, ProductExtraImage
 
 
 class ProductImageInline(admin.TabularInline):

@@ -1,7 +1,8 @@
 from django.db import models
 from django.urls import reverse
-from apps.catalog.models.base import BaseModel
 from pytils.translit import slugify
+
+from apps.catalog.models.base import BaseModel
 
 
 class Category(BaseModel):

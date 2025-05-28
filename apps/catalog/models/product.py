@@ -1,9 +1,11 @@
 from decimal import Decimal
+
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from django.urls import reverse
+
 from apps.catalog.models.base import BaseModel
 from apps.catalog.models.category import Category
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.catalog.models.managers import ProductManager
 from apps.catalog.services.product_services import ProductServices
 
@@ -21,7 +23,10 @@ class Product(BaseModel):
     name = models.CharField("Название", max_length=200)
     sku = models.CharField("Артикул", max_length=50, unique=True)
     price = models.DecimalField(
-        "Цена", max_digits=10, decimal_places=2, validators=[MinValueValidator(0)]
+        "Цена",
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.00"))],
     )
     discount = models.PositiveSmallIntegerField(
         "Скидка %", default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]

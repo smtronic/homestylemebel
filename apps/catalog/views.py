@@ -1,14 +1,13 @@
-from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from apps.catalog.models import Category, Product
-from apps.catalog.serializers import (
-    CategorySerializer,
-    ProductListSerializer,
-    ProductDetailSerializer,
-    ProductCreateUpdateSerializer,
-)
-from apps.catalog.permissions import IsAdminOrReadOnly
+from rest_framework import filters, viewsets
+
 from apps.catalog.filters import ProductFilter
+from apps.catalog.models import Category, Product
+from apps.catalog.permissions import IsAdminOrReadOnly
+from apps.catalog.serializers import (CategorySerializer,
+                                      ProductCreateUpdateSerializer,
+                                      ProductDetailSerializer,
+                                      ProductListSerializer)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
