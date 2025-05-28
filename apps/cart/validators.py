@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+
 from apps.catalog.models import Product
 
 
@@ -16,6 +17,9 @@ def validate_stock(
     Raises:
         ValidationError: Если товар недоступен, количество некорректно или больше доступного на складе.
     """
+    if not product:
+        raise ValidationError("Товар не существует.")
+
     if not product.available_for_order:
         raise ValidationError(f"Товар '{product.name}' недоступен для заказа.")
 

@@ -1,12 +1,13 @@
-from django.db import models
+from decimal import ROUND_HALF_UP, Decimal
+from uuid import uuid4
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, RegexValidator
-from apps.catalog.models import Product
-from apps.cart.validators import validate_stock
-from uuid import uuid4
-from decimal import Decimal, ROUND_HALF_UP
+from django.db import models
 
+from apps.cart.validators import validate_stock
+from apps.catalog.models import Product
 
 User = get_user_model()
 
@@ -116,9 +117,11 @@ class CartItem(models.Model):
 
     def clean(self):
         """Проверка quantity на соответствие product.stock и available_for_order"""
-        if self.product and self.product.available_for_order:
+        if not self.product:
+            raise ValidationError("Товар не существует.")
+        if self.product.available_for_order:
             validate_stock(self.product, self.quantity, current_quantity=0)
-        elif self.product and not self.product.available_for_order:
+        else:
             raise ValidationError(f"Товар '{self.product.name}' недоступен для заказа.")
 
     def __str__(self):

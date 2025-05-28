@@ -1,5 +1,4 @@
 from rest_framework.permissions import BasePermission
-from django.contrib.auth.models import AnonymousUser
 
 
 class IsCartAccessAllowed(BasePermission):
@@ -13,11 +12,9 @@ class IsCartAccessAllowed(BasePermission):
         """
         Проверяет, может ли пользователь выполнить действие на уровне запроса.
         """
-        if view.action in ("list", "add"):
+        if view.action in ("retrieve", "list", "add"):
             return True
-
-        # Для остальных действий требуется авторизация или сессия
-        return request.user.is_authenticated or (
+        return request.user.is_authenticated or bool(
             hasattr(request, "session") and request.session.session_key
         )
 
@@ -27,11 +24,8 @@ class IsCartAccessAllowed(BasePermission):
         """
         if request.user.is_staff:
             return True
-
         if request.user.is_authenticated:
-            return obj.cart.user == request.user if obj.cart.user else False
-
+            return obj.cart.user == request.user
         if hasattr(request, "session") and request.session.session_key:
             return obj.cart.session_key == request.session.session_key
-
         return False
