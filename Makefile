@@ -1,7 +1,7 @@
 include .env
 export
 
-.PHONY: install install-dev test coverage lint format run graph dump-sql restore-sql dump restore
+.PHONY: install install-dev test coverage lint format run graph dump-sql restore-sql dump restore spectacular_upgrade
 
 # 📦 Install production dependencies
 install:
@@ -58,3 +58,6 @@ dump:
 # Restore from compressed custom-format dump
 restore:
 	gunzip -c backup.dump.gz | pg_restore -U $(DB_USER) -d $(DB_NAME)
+
+spectacular_upgrade:
+	python manage.py spectacular --file schema.yaml
