@@ -1,12 +1,13 @@
-from django.db import models
+from uuid import uuid4
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from apps.catalog.models import Product
-from uuid import uuid4
-from apps.cart.models import Cart
+from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from apps.cart.models import Cart
+from apps.catalog.models import Product
 
 User = get_user_model()
 

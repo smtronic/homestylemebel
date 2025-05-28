@@ -1,9 +1,9 @@
 from django.core.exceptions import ValidationError
-from apps.orders.models import Order, OrderItem
+from django.db import models, transaction
+
 from apps.cart.models import Cart
 from apps.catalog.models import Product
-from django.db import models
-from django.db import transaction
+from apps.orders.models import Order, OrderItem
 
 
 class OrderService:

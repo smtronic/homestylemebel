@@ -1,9 +1,11 @@
+from uuid import uuid4
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-from uuid import uuid4
-from apps.users.managers import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
+
+from apps.users.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):

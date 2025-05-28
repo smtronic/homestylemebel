@@ -7,14 +7,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cart', '0002_initial'),
-        ('orders', '0001_initial'),
+        ("cart", "0002_initial"),
+        ("orders", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='cart',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='cart.cart', verbose_name='Корзина'),
+            model_name="order",
+            name="cart",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cart.cart",
+                verbose_name="Корзина",
+            ),
         ),
     ]
