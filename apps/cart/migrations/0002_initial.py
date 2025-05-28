@@ -10,33 +10,56 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('cart', '0001_initial'),
-        ('catalog', '0001_initial'),
+        ("cart", "0001_initial"),
+        ("catalog", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cart',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
+            model_name="cart",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Пользователь",
+            ),
         ),
         migrations.AddField(
-            model_name='cartitem',
-            name='cart',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='cart.cart'),
+            model_name="cartitem",
+            name="cart",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="items",
+                to="cart.cart",
+            ),
         ),
         migrations.AddField(
-            model_name='cartitem',
-            name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='catalog.product', verbose_name='Товар'),
+            model_name="cartitem",
+            name="product",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="catalog.product",
+                verbose_name="Товар",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='cart',
-            constraint=models.CheckConstraint(condition=models.Q(('user__isnull', False), ('session_key__isnull', False), _connector='OR'), name='cart_has_user_or_session'),
+            model_name="cart",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("user__isnull", False),
+                    ("session_key__isnull", False),
+                    _connector="OR",
+                ),
+                name="cart_has_user_or_session",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='cartitem',
-            constraint=models.UniqueConstraint(fields=('cart', 'product'), name='unique_product_in_cart'),
+            model_name="cartitem",
+            constraint=models.UniqueConstraint(
+                fields=("cart", "product"), name="unique_product_in_cart"
+            ),
         ),
     ]
