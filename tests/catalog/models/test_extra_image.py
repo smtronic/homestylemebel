@@ -1,6 +1,7 @@
 import pytest
-from apps.catalog.models import ProductExtraImage
 from django.core.files.uploadedfile import SimpleUploadedFile
+
+from apps.catalog.models import ProductExtraImage
 
 
 @pytest.mark.django_db

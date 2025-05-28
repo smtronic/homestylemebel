@@ -1,9 +1,11 @@
+from decimal import Decimal
+
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+
 from apps.catalog.models import Category, Product
 from apps.users.models import User
-from decimal import Decimal
 
 
 class CategoryURLTest(APITestCase):

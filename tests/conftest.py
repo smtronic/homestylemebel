@@ -1,9 +1,18 @@
-import pytest
 import tempfile
-from PIL import Image
-from django.core.files.uploadedfile import SimpleUploadedFile
-from apps.catalog.models import Category, Product, ProductExtraImage
 from decimal import Decimal
+
+import factory
+import pytest
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
+from faker import Faker
+from PIL import Image
+
+from apps.catalog.models import Category, Product, ProductExtraImage
+
+fake = Faker()
+
+User = get_user_model()
 
 
 @pytest.fixture
@@ -49,3 +58,22 @@ def django_test_image():
         yield SimpleUploadedFile(
             name="test_image.png", content=f.read(), content_type="image/png"
         )
+
+
+class UserFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = User
+
+    email = factory.Sequence(lambda n: f"user{n}@example.com")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
+    phone = factory.LazyFunction(lambda: f"+7{fake.msisdn()[3:]}")
+    password = factory.PostGenerationMethodCall("set_password", "password")
+    is_staff = False
+    is_superuser = False
+    is_active = True
+
+
+@pytest.fixture
+def user(db):
+    return UserFactory.create()

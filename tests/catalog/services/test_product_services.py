@@ -1,7 +1,9 @@
-import pytest
 from decimal import Decimal
-from apps.catalog.services.product_services import ProductServices
 from unittest.mock import patch
+
+import pytest
+
+from apps.catalog.services.product_services import ProductServices
 
 
 @pytest.mark.django_db

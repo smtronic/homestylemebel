@@ -1,4 +1,5 @@
 import pytest
+
 from apps.catalog.serializers import ProductListSerializer
 
 

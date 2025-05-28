@@ -1,9 +1,11 @@
 from decimal import Decimal
-from rest_framework.test import APITestCase
+
 from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
+
 from apps.catalog.models import Category, Product
 from apps.users.models import User
-from rest_framework.authtoken.models import Token
 
 
 class CategoryViewSetTest(APITestCase):
