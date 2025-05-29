@@ -1,156 +1,150 @@
 # ✅ Project Roadmap — homestylemebel
 
-Last updated: 2025-04-16
+Last updated: 2025-05-29
 
 ---
 
-## ✅ Phase 1: Initial Setup & Architecture (COMPLETED)
+## ✅ Phase 1: Setup & Models
 
-**Goal:** Prepare project structure and core components.
-
-- [x] Initialize Django project & Git repository
-- [x] App-based project structure (`apps/`, `tests/`, `docs/`)
-- [x] Custom user model (`users.User`)
-- [x] Base models: `Category`, `Product`, `ProductExtraImage`
-- [x] Requirements split: `base`, `dev`, `prod`
-- [x] Makefile with common dev commands
-- [x] Linters setup: `black`, `flake8`, `isort`
-- [x] Code coverage and test structure
-- [x] ER diagram with `django-extensions`
+- [x] Django project setup
+- [x] Models: `User`, `Category`, `Product`, `ProductExtraImage`
+- [x] Custom user model (email-based auth)
+- [x] Database migrations
+- [x] Admin panel customization
 
 ---
 
-## 🚧 Phase 2: Public API (Catalog)
+## ✅ Phase 2: Public API (Catalog & Cart)
 
-**Goal:** Provide product and category data to unauthenticated users.
+**Goal:** Provide product, category, and cart data to unauthenticated and authenticated users.
 
 ### Categories
 
-- [x] `GET /api/v1/categories/` — List
-- [x] `GET /api/v1/categories/{slug}/` — Detail
-- [x] Slug auto-generation
-- [x] Capitalization of names
+- [x] Models: `Category`
+- [x] Endpoints:
+  - [x] `GET /api/v1/categories/`
+  - [x] `GET /api/v1/categories/{slug}/`
+- [x] Filters: search, ordering
 
 ### Products
 
-- [x] `GET /api/v1/products/` — List with search, filters and ordering
-- [x] `GET /api/v1/products/{slug}/` — Detail view
-- [x] Slug generation based on name + SKU
-- [x] `ProductServices`: price calc, availability logic
+- [x] Models: `Product`, `ProductExtraImage`
+- [x] Endpoints:
+  - [x] `GET /api/v1/products/`
+  - [x] `GET /api/v1/products/{slug}/`
 - [x] Pagination, search (`?search=`), filter by category, price range, stock
 - [x] Sorting by price, date, etc.
 
+### Cart
+
+- [x] Models: `Cart`, `CartItem`
+- [x] Endpoints:
+  - [x] `GET /api/v1/cart/` — Retrieve list of items in current cart
+  - [x] `POST /api/v1/cart/add/` — Add product to cart
+  - [x] `PATCH /api/v1/cart/<pk>/update/` — Update cart item quantity
+  - [x] `DELETE /api/v1/cart/<pk>/remove/` — Remove cart item
+  - [x] `GET /api/v1/cart/detail/` — Get current cart details (items, total)
+- [x] Cart session handling (anonymous via `session_key`, authenticated via `user`)
+- [x] Quantity validation (≤ product stock)
+- [x] Product existence and availability validation (`available_for_order`)
+- [x] API documentation with `drf-spectacular` (OpenAPI schema)
+- [x] Admin panel routes:
+  - [x] `/admin/cart/cart/` — List carts
+  - [x] `/admin/cart/cart/add/` — Add cart
+  - [x] `/admin/cart/cart/<id>/change/` — Edit cart
+  - [x] `/admin/cart/cart/<id>/delete/` — Delete cart
+  - [x] `/admin/cart/cart/<id>/history/` — View cart history
+  - [x] `/admin/cart/cartitem/` — List cart items
+  - [x] `/admin/cart/cartitem/add/` — Add cart item
+  - [x] `/admin/cart/cartitem/<id>/change/` — Edit cart item
+  - [x] `/admin/cart/cartitem/<id>/delete/` — Delete cart item
+  - [x] `/admin/cart/cartitem/<id>/history/` — View cart item history
+
 ### Tests
 
-- [x] Unit tests (models, services)
-- [x] Integration tests (views, serializers)
-- [x] Route tests
+- [x] Unit tests (models, services, serializers)
+- [x] Integration tests (views, permissions, endpoints)
+- [x] Route tests (API and admin routes)
+- [x] Cart operation tests (add, update, remove, detail, session handling)
 
 ### Docs
 
 - [x] `api.md`
 - [x] `database.md`
 - [x] `testing.md`
-- [ ] Auto-generated API docs (Swagger/OpenAPI)
+- [x] OpenAPI schema with `drf-spectacular`
+- [ ] Auto-generated API docs (Swagger/OpenAPI UI)
 
 ---
 
-## 🐳 Phase 2.5: Docker & CI/CD
+## 🔄 Phase 3: Orders
 
-**Goal:** Containerized local dev and test automation.
-
-- [ ] Dockerfile + docker-compose setup
-- [ ] `.env` for env vars
-- [ ] `make up`, `make down` commands
-- [ ] GitHub Actions:
-  - [x] Run tests
-  - [ ] Lint check
-  - [ ] Code coverage badge
-
----
-
-## 🔄 Phase 3: Cart & Orders (Guest and Auth Users)
-
-**Goal:** Support shopping cart and order creation for all users.
-
-### Cart
-
-- [x] Models: `Cart`, `CartItem`
-- [ ] Endpoints:
-  - [ ] `GET /api/v1/cart/`
-  - [ ] `POST /api/v1/cart/add/`
-  - [ ] `PATCH /api/v1/cart/update/{item_id}/`
-  - [ ] `DELETE /api/v1/cart/remove/{item_id}/`
-- [ ] Cart session handling (anon vs auth)
-- [ ] Quantity validation (≤ product stock)
+**Goal:** Support order creation for all users.
 
 ### Orders
 
-- [x] Models: `Order`, `OrderItem`
-- [ ] `POST /api/v1/orders/`:
-  - For guests: requires `full_name`, `phone`, `email`
-  - For logged-in users: use profile data, but allow override
-- [ ] For **authenticated users** only:
-  - [ ] `GET /api/v1/orders/` — list user's orders
-  - [ ] `GET /api/v1/orders/{id}/` — order detail
+- [ ] Models: `Order`, `OrderItem`
+- [ ] Endpoints:
+  - [ ] `POST /api/v1/orders/` — Create order
+    - For guests: requires `full_name`, `phone`, `email`
+    - For logged-in users: use profile data, but allow override
+  - [ ] For **authenticated users** only:
+    - [ ] `GET /api/v1/orders/` — List user's orders
+    - [ ] `GET /api/v1/orders/{id}/` — Order detail
 
 ### Business logic
 
-- [x] `CartService`, `OrderService`
+- [x] `OrderService`
 - [ ] Validation: stock check, empty cart check, duplicate prevention
 
 ### Testing
 
-- [ ] Unit & integration tests
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Edge cases: stock issues, invalid user data
+
+### Docs
+
+- [ ] Update `api.md`
+- [ ] Update `database.md`
 
 ---
 
-## 🔐 Phase 4: Authentication (JWT)
+## 🔄 Phase 4: Authentication
 
-**Goal:** Add registration, login, profile, and secure API access.
+**Goal:** Enable secure user authentication.
 
-- [ ] Register endpoint (`POST /api/v1/auth/register/`)
-- [ ] Login endpoint (`POST /api/v1/auth/login/`)
-- [ ] JWT auth with `djangorestframework-simplejwt`
-- [ ] Profile endpoint (`GET /api/v1/users/me/`)
-- [ ] Update profile (`PATCH /api/v1/users/me/`)
-- [ ] Protected route access with token
-- [ ] Tests for all endpoints
+- [ ] JWT Authentication (django-rest-framework-simplejwt)
+- [ ] Endpoints:
+  - [ ] `POST /api/v1/auth/login/`
+  - [ ] `POST /api/v1/auth/refresh/`
+  - [ ] `POST /api/v1/auth/register/`
+  - [ ] `GET /api/v1/users/me/` — User profile
+  - [ ] `PATCH /api/v1/users/me/` — Update profile
+- [ ] Password reset flow
+- [ ] Email confirmation
 
 ---
 
-## 🛠 Phase 5: Debugging & Performance (Django Debug Toolbar)
+## 🔄 Phase 5: Debugging Tools
 
 **Goal:** Enable detailed debugging and performance insights in the development environment.
 
 - [ ] Install **Django Debug Toolbar**:
-
   - [ ] Install via `pip install django-debug-toolbar`
   - [ ] Add `'debug_toolbar'` to `INSTALLED_APPS`
   - [ ] Include `debug_toolbar.middleware.DebugToolbarMiddleware` in `MIDDLEWARE`
   - [ ] Set `INTERNAL_IPS = ['127.0.0.1']` for local debugging
-
 - [ ] Usage:
-  - [ ] Provides detailed analysis of SQL queries, template rendering times, request/response cycle, and more
+  - [ ] Provides detailed analysis of SQL queries, template rendering times, request/response cycle
   - [ ] Highlights performance issues like N+1 queries
-  - [ ] Shows cache, signals, and other useful debug info
-
----
-
-## 🚀 Phase 6: Advanced Features
-
-**Goal:** Improve UX, admin tooling, and scalability.
-
-- [ ] Merge guest + user carts on login
-- [ ] Celery: email notifications on order status updates
-- [ ] Admin reports: sales statistics, top products
-- [ ] Product attributes (color, size, material)
-- [ ] OpenAPI UI (Swagger or ReDoc)
+  - [ ] Shows cache, signals, and other debug info
 
 ---
 
 ## 📌 Suggestions & Ideas
 
-- [ ] Add `drf-spectacular` or `drf-yasg` for auto API docs
+- [x] Add `drf-spectacular` for OpenAPI schema
+- [ ] Add `drf-yasg` or Swagger UI for interactive API docs
 - [ ] Rate limiting / throttling (for heavy endpoints)
 - [ ] Review permissions (e.g., order access, admin-only features)
