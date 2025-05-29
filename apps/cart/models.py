@@ -33,7 +33,7 @@ class Cart(models.Model):
 
     @property
     def total(self) -> Decimal:
-        total = sum(item.total_price for item in self.items.all())
+        total = sum((item.total_price for item in self.items.all()), Decimal("0.00"))
         return total.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
     def __str__(self):

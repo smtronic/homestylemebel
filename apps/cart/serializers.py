@@ -40,7 +40,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.BooleanField())
     def get_is_available(self, obj):
-        return obj.product and obj.product.available_for_order
+        return bool(obj.product and obj.product.available_for_order)
 
 
 class CartSerializer(serializers.ModelSerializer):
