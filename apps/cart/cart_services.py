@@ -4,8 +4,8 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 
 from apps.cart.models import Cart, CartItem
-from apps.cart.validators import validate_stock
 from apps.catalog.models import Product
+from apps.cart.validators import validate_stock
 
 
 class CartService:
@@ -27,22 +27,18 @@ class CartService:
     @transaction.atomic
     def add_item(self, product_id: str, quantity: int) -> CartItem:
         product = get_object_or_404(Product, id=product_id)
-        item, created = CartItem.objects.get_or_create(
-            cart=self.cart,
-            product=product,
-            defaults={"quantity": quantity},
-        )
+        item, created = CartItem.objects.get_or_create(cart=self.cart, product=product)
         new_quantity = quantity if created else item.quantity + quantity
-        validate_stock(product, new_quantity, current_quantity=0)
+        validate_stock(product, new_quantity)
         item.quantity = new_quantity
         item.save()
         return item
 
     @transaction.atomic
-    def update_item(self, item_id: str, new_quantity: int) -> CartItem:
+    def update_item(self, item_id: str, quantity: int) -> CartItem:
         item = get_object_or_404(CartItem, id=item_id, cart=self.cart)
-        validate_stock(item.product, new_quantity, current_quantity=0)
-        item.quantity = new_quantity
+        validate_stock(item.product, quantity)
+        item.quantity = quantity
         item.save()
         return item
 
