@@ -8,6 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.cart.models import Cart
 from apps.catalog.models import Product
+from apps.orders.managers import OrderItemManager
 
 User = get_user_model()
 
@@ -22,6 +23,14 @@ class Order(models.Model):
         CANCELLED = "cancelled", "Отменён"
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    user = models.ForeignKey(  # <-- Новое поле
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="orders",
+        verbose_name="Пользователь",
+    )
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, verbose_name="Корзина")
     full_name = models.CharField(max_length=255, verbose_name="ФИО")
     phone = PhoneNumberField(region="RU", unique=False, verbose_name="Контактный номер")
@@ -62,6 +71,8 @@ class OrderItem(models.Model):
     price = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Цена на момент заказа"
     )
+
+    objects = OrderItemManager()
 
     class Meta:
         verbose_name = "Товар в заказе"

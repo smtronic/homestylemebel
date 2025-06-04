@@ -1,5 +1,5 @@
-from django.core.exceptions import ValidationError
 from django.db import models, transaction
+from rest_framework.exceptions import ValidationError
 
 from apps.cart.models import Cart
 from apps.catalog.models import Product
@@ -31,6 +31,7 @@ class OrderService:
             Product.objects.filter(pk=cart_item.product.pk).update(
                 stock=models.F("stock") - cart_item.quantity
             )
+        cart.items.all().delete()
 
         return order
 

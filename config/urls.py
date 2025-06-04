@@ -14,7 +14,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # API v1
     path("api/v1/", include("apps.catalog.urls")),
-    path("api/v1/cart/", include("apps.cart.urls")),
+    path("api/v1/carts/", include("apps.cart.urls")),
+    path("api/v1/orders/", include("apps.orders.urls")),
     # Swagger и Redoc
     path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

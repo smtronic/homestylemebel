@@ -7,6 +7,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.cart.models import Cart
 from apps.cart.cart_services import CartService
 from apps.cart.permissions import IsCartAccessAllowed
 from apps.cart.serializers import (
@@ -56,6 +57,7 @@ from apps.cart.serializers import (
 )
 class CartViewSet(viewsets.ViewSet):
     permission_classes = [IsCartAccessAllowed]
+    queryset = Cart.objects.all()
 
     def get_serializer_class(self):
         if self.action == "get_current_cart":
@@ -68,7 +70,7 @@ class CartViewSet(viewsets.ViewSet):
             return CartItemUpdateSerializer
         return None  # для remove — нет тела запроса
 
-    @action(detail=False, methods=["get"], url_path="detail", name="cart-detail")
+    @action(detail=False, methods=["get"], url_path="detail")
     def get_current_cart(self, request):
         cart = CartService.get_or_create_cart(request)
         serializer = CartSerializer(cart)
@@ -81,7 +83,7 @@ class CartViewSet(viewsets.ViewSet):
         serializer = CartItemSerializer(items, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["post"], url_path="add", name="cart-add")
+    @action(detail=False, methods=["post"], url_path="add")
     def add(self, request):
         serializer = AddToCartSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -102,7 +104,7 @@ class CartViewSet(viewsets.ViewSet):
                 e.message_dict if hasattr(e, "message_dict") else e.messages
             )
 
-    @action(detail=True, methods=["patch"], url_path="update", name="cart-update")
+    @action(detail=True, methods=["patch"], url_path="update")
     def update_item(self, request, pk=None):
         cart = CartService.get_or_create_cart(request)
         service = CartService(cart)
@@ -113,7 +115,7 @@ class CartViewSet(viewsets.ViewSet):
         item = service.update_item(pk, serializer.validated_data["quantity"])
         return Response(CartItemSerializer(item).data)
 
-    @action(detail=True, methods=["delete"], url_path="remove", name="cart-remove")
+    @action(detail=True, methods=["delete"], url_path="remove")
     def remove(self, request, pk=None):
         cart = CartService.get_or_create_cart(request)
         service = CartService(cart)

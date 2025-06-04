@@ -1,0 +1,1146 @@
+openapi: 3.0.3
+info:
+  title: Homestyle Mebel API
+  version: 1.0.0
+  description: E-commerce API for catalog, cart, and orders.
+paths:
+  /api/v1/carts/:
+    get:
+      operationId: carts_list
+      tags:
+      - carts
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartItem'
+          description: ''
+  /api/v1/carts/{id}/remove/:
+    delete:
+      operationId: carts_remove_destroy
+      summary: Удалить товар из корзины
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this cart.
+        required: true
+      - in: path
+        name: pk
+        schema:
+          type: string
+          format: uuid
+        description: UUID позиции товара в корзине
+        required: true
+      tags:
+      - carts
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/carts/{id}/update/:
+    patch:
+      operationId: carts_update_partial_update
+      description: Изменяет количество конкретной позиции в корзине.
+      summary: Обновить количество товара
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this cart.
+        required: true
+      - in: path
+        name: pk
+        schema:
+          type: string
+          format: uuid
+        description: UUID позиции товара в корзине
+        required: true
+      tags:
+      - carts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCartItemUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCartItemUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCartItemUpdate'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItem'
+          description: ''
+  /api/v1/carts/add/:
+    post:
+      operationId: carts_add_create
+      summary: Добавить товар в корзину
+      tags:
+      - carts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddToCart'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItem'
+          description: ''
+  /api/v1/carts/detail/:
+    get:
+      operationId: carts_detail_retrieve
+      tags:
+      - carts
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: ''
+  /api/v1/categories/:
+    get:
+      operationId: categories_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - categories
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+          description: ''
+    post:
+      operationId: categories_create
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/categories/{slug}/:
+    get:
+      operationId: categories_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    put:
+      operationId: categories_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Category'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    patch:
+      operationId: categories_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCategory'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+    delete:
+      operationId: categories_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - categories
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/orders/:
+    get:
+      operationId: orders_list
+      description: Возвращает список заказов текущего аутентифицированного пользователя.
+      summary: Получить список заказов
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+          description: ''
+        '401':
+          description: Пользователь не аутентифицирован
+    post:
+      operationId: orders_create
+      description: Создаёт заказ из текущей корзины. Доступно для всех пользователей.
+        Для гостей требуется full_name, phone, email (опционально). Для аутентифицированных
+        пользователей данные берутся из профиля, но могут быть переопределены.
+      summary: Создать заказ
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+          description: Заказ создан
+        '400':
+          description: Неверные данные или пустая корзина
+  /api/v1/orders/{id}/:
+    get:
+      operationId: orders_retrieve
+      description: Возвращает детали заказа по ID для аутентифицированного пользователя.
+        Доступно только для заказов, принадлежащих пользователю.
+      summary: Получить детали заказа
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Заказ.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+        '401':
+          description: Пользователь не аутентифицирован
+        '403':
+          description: Доступ запрещён
+        '404':
+          description: Заказ не найден
+  /api/v1/orders/{id}/cancel/:
+    post:
+      operationId: orders_cancel_create
+      description: Позволяет администратору отменить заказ. Статус должен быть 'new'
+        или 'processing'.
+      summary: Отменить заказ
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Заказ.
+        required: true
+      tags:
+      - orders
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          description: Заказ успешно отменён
+        '400':
+          description: Нельзя отменить заказ
+        '403':
+          description: Нет прав
+        '404':
+          description: Заказ не найден
+  /api/v1/orders/{id}/edit/:
+    patch:
+      operationId: orders_edit_partial_update
+      description: Позволяет изменить контактные данные заказа, если он ещё не завершён.
+      summary: Обновить заказ
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Заказ.
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedOrderUpdate'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: ''
+        '400':
+          description: Неверные данные или заказ уже завершён
+        '403':
+          description: Нет доступа
+        '404':
+          description: Заказ не найден
+  /api/v1/products/:
+    get:
+      operationId: products_list
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: string
+        description: Категория
+      - in: query
+        name: in_stock
+        schema:
+          type: boolean
+        description: В наличии
+      - in: query
+        name: max_price
+        schema:
+          type: number
+        description: Цена до
+      - in: query
+        name: min_price
+        schema:
+          type: number
+        description: Цена от
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - products
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductList'
+          description: ''
+    post:
+      operationId: products_create
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreateUpdate'
+          description: ''
+  /api/v1/products/{slug}/:
+    get:
+      operationId: products_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    put:
+      operationId: products_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreateUpdate'
+          description: ''
+    patch:
+      operationId: products_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductCreateUpdate'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreateUpdate'
+          description: ''
+    delete:
+      operationId: products_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - products
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    AddToCart:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+          minimum: 1
+      required:
+      - product_id
+      - quantity
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - id
+      - items
+      - total
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        product:
+          allOf:
+          - $ref: '#/components/schemas/ProductInCart'
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+        total_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        is_available:
+          type: boolean
+          readOnly: true
+      required:
+      - id
+      - is_available
+      - product
+      - total_price
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 150
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          nullable: true
+          title: Описание
+        image:
+          type: string
+          format: uri
+          title: Изображение
+      required:
+      - id
+      - name
+    Order:
+      type: object
+      description: Сериализатор для получения заказа
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        full_name:
+          type: string
+          title: ФИО
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        phone:
+          type: string
+          title: Контактный номер
+          maxLength: 128
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+          title: Статус заказа
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Создан
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Обновлен
+        total:
+          type: number
+          format: decimal
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          readOnly: true
+      required:
+      - created_at
+      - full_name
+      - id
+      - items
+      - phone
+      - status
+      - total
+      - updated_at
+    OrderCreate:
+      type: object
+      description: Сериализатор для создания заказа
+      properties:
+        full_name:
+          type: string
+          maxLength: 255
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+      - full_name
+      - phone
+    OrderItem:
+      type: object
+      description: Сериализатор позиции в заказе
+      properties:
+        product:
+          allOf:
+          - $ref: '#/components/schemas/ProductInOrder'
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          title: Количество
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена на момент заказа
+        total_price:
+          type: number
+          format: decimal
+          readOnly: true
+      required:
+      - price
+      - product
+      - total_price
+    PatchedCartItemUpdate:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+    PatchedCategory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 150
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          nullable: true
+          title: Описание
+        image:
+          type: string
+          format: uri
+          title: Изображение
+    PatchedOrderUpdate:
+      type: object
+      properties:
+        full_name:
+          type: string
+          title: ФИО
+          maxLength: 255
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+    PatchedProductCreateUpdate:
+      type: object
+      properties:
+        sku:
+          type: string
+          title: Артикул
+          maxLength: 50
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          title: Описание
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена
+        discount:
+          type: integer
+          maximum: 100
+          minimum: 0
+          title: Скидка %
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          title: Остаток
+        main_image:
+          type: string
+          format: uri
+          title: Основное изображение
+        category:
+          type: string
+          format: uuid
+          nullable: true
+    ProductCreateUpdate:
+      type: object
+      properties:
+        sku:
+          type: string
+          title: Артикул
+          maxLength: 50
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          title: Описание
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена
+        discount:
+          type: integer
+          maximum: 100
+          minimum: 0
+          title: Скидка %
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          title: Остаток
+        main_image:
+          type: string
+          format: uri
+          title: Основное изображение
+        category:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - name
+      - price
+      - sku
+    ProductDetail:
+      type: object
+      properties:
+        sku:
+          type: string
+          title: Артикул
+          maxLength: 50
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        description:
+          type: string
+          nullable: true
+          title: Описание
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена
+        discount:
+          type: integer
+          maximum: 100
+          minimum: 0
+          title: Скидка %
+        actual_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          title: Остаток
+        main_image:
+          type: string
+          format: uri
+          title: Основное изображение
+        extra_images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductExtraImage'
+          readOnly: true
+        category:
+          allOf:
+          - $ref: '#/components/schemas/Category'
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+      required:
+      - actual_price
+      - category
+      - extra_images
+      - name
+      - price
+      - sku
+      - slug
+    ProductExtraImage:
+      type: object
+      properties:
+        image:
+          type: string
+          format: uri
+      required:
+      - image
+    ProductInCart:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        sku:
+          type: string
+          title: Артикул
+          maxLength: 50
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        main_image:
+          type: string
+          format: uri
+          title: Основное изображение
+        slug:
+          type: string
+          maxLength: 150
+          pattern: ^[-a-zA-Z0-9_]+$
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена
+        discount:
+          type: integer
+          maximum: 100
+          minimum: 0
+          title: Скидка %
+        actual_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - actual_price
+      - id
+      - name
+      - price
+      - sku
+    ProductInOrder:
+      type: object
+      description: Краткая информация о товаре в заказе
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        sku:
+          type: string
+          title: Артикул
+          maxLength: 50
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена
+        main_image:
+          type: string
+          format: uri
+          title: Основное изображение
+        slug:
+          type: string
+          maxLength: 150
+          pattern: ^[-a-zA-Z0-9_]+$
+      required:
+      - id
+      - name
+      - price
+      - sku
+    ProductList:
+      type: object
+      properties:
+        sku:
+          type: string
+          title: Артикул
+          maxLength: 50
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          title: Цена
+        discount:
+          type: integer
+          maximum: 100
+          minimum: 0
+          title: Скидка %
+        actual_price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+        main_image:
+          type: string
+          format: uri
+          title: Основное изображение
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          title: Остаток
+        category:
+          type: string
+          readOnly: true
+      required:
+      - actual_price
+      - category
+      - name
+      - price
+      - sku
+    StatusEnum:
+      enum:
+      - new
+      - processing
+      - completed
+      - cancelled
+      type: string
+      description: |-
+        * `new` - Новый
+        * `processing` - В обработке
+        * `completed` - Завершён
+        * `cancelled` - Отменён
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
