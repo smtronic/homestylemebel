@@ -41,6 +41,7 @@ class Order(models.Model):
         default=Status.NEW,
         verbose_name="Статус заказа",
     )
+    notes = models.TextField(null=True, blank=True, verbose_name="Заметки")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создан")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлен")
 
