@@ -12,7 +12,7 @@ class CategoryViewSetTest(APITestCase):
 
     def setUp(self):
         self.category = Category.objects.create(name="Столы", slug="stolyi")
-        self.url = "/api/v1/categories/"
+        self.url = "/api/v1/catalog/categories/"
 
     def test_get_category_list(self):
         response = self.client.get(self.url)
@@ -47,8 +47,8 @@ class ProductViewSetTest(APITestCase):
             category=self.category,
             slug="stol-obedennyj-sku001",
         )
-        self.product_url = f"/api/v1/products/{self.product.slug}/"
-        self.products_url = "/api/v1/products/"
+        self.product_url = f"/api/v1/catalog/products/{self.product.slug}/"
+        self.products_url = "/api/v1/catalog/products/"
 
     def test_get_product_list(self):
         response = self.client.get(self.products_url)
