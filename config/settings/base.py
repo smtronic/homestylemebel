@@ -24,12 +24,6 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
-
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -139,7 +133,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE = 3600
-# SESSION_COOKIE_SECURE = True # для продакшена
 
 REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": True,
