@@ -1,10 +1,10 @@
-from rest_framework import serializers
-from phonenumber_field.serializerfields import PhoneNumberField
 from drf_spectacular.utils import extend_schema_field
+from phonenumber_field.serializerfields import PhoneNumberField
+from rest_framework import serializers
 
-from apps.orders.models import Order, OrderItem
-from apps.catalog.models import Product
 from apps.cart.models import Cart
+from apps.catalog.models import Product
+from apps.orders.models import Order, OrderItem
 
 
 class ProductInOrderSerializer(serializers.ModelSerializer):

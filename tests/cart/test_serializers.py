@@ -5,12 +5,8 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError as DRFValidationError
 
 from apps.cart.models import Cart, CartItem
-from apps.cart.serializers import (
-    AddToCartSerializer,
-    CartItemSerializer,
-    CartItemUpdateSerializer,
-    CartSerializer,
-)
+from apps.cart.serializers import (AddToCartSerializer, CartItemSerializer,
+                                   CartItemUpdateSerializer, CartSerializer)
 
 
 @pytest.mark.django_db

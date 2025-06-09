@@ -4,8 +4,8 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 
 from apps.cart.models import Cart, CartItem
-from apps.catalog.models import Product
 from apps.cart.validators import validate_stock
+from apps.catalog.models import Product
 
 
 class CartService:

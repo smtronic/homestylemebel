@@ -1,9 +1,10 @@
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+
 from apps.catalog.models import Product
 
 User = get_user_model()

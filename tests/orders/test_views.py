@@ -2,10 +2,9 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
+
 from apps.cart.models import Cart, CartItem
 from apps.orders.models import Order
-
-
 from tests.conftest import UserFactory
 
 
