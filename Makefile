@@ -1,7 +1,7 @@
 include .env
 export
 
-.PHONY: install install-dev test coverage lint format run graph dump-sql restore-sql dump restore spectacular_upgrade
+.PHONY: install install-dev test coverage lint format run graph dump-sql restore-sql dump restore spectacular_upgrade docker-build-dev docker-up-dev docker-down-dev docker-build-prod docker-up-prod docker-down-prod
 
 # 📦 Install production dependencies
 install:
@@ -35,29 +35,55 @@ run:
 	python manage.py runserver
 
 # 🧠 Generate ER diagram of the models
-graph:
-	python manage.py graph_models catalog cart orders users \
-		--theme=django2018 \
-		--group-models \
-		--output docs/image/er_diagram.png
+# graph:
+# 	python manage.py graph_models catalog cart orders users \
+# 		--theme=django2018 \
+# 		--group-models \
+# 		--output docs/image/er_diagram.png
 
 # 🛢 PostgreSQL database operations
 
+# Create backup directory
+backup-dir:
+	mkdir -p backup
+
 # SQL dump
-dump-sql:
-	pg_dump -U $(DB_USER) -d $(DB_NAME) > backup.sql
+dump-sql: backup-dir
+	pg_dump -U $(DB_USER) -d $(DB_NAME) > backup/backup.sql
 
 # Restore from SQL dump
 restore-sql:
-	psql -U $(DB_USER) -d $(DB_NAME) < backup.sql
+	psql -U $(DB_USER) -d $(DB_NAME) < backup/backup.sql
 
 # Compressed custom-format dump
-dump:
-	pg_dump -U $(DB_USER) -d $(DB_NAME) -Fc | gzip > backup.dump.gz
+dump: backup-dir
+	pg_dump -U $(DB_USER) -d $(DB_NAME) -Fc | gzip > backup/backup.dump.gz
 
 # Restore from compressed custom-format dump
 restore:
-	gunzip -c backup.dump.gz | pg_restore -U $(DB_USER) -d $(DB_NAME)
+	gunzip -c backup/backup.dump.gz | pg_restore -U $(DB_USER) -d $(DB_NAME)
 
 spectacular_upgrade:
 	python manage.py spectacular --file schema.yaml
+
+# Docker Compose commands for development
+
+docker-build-dev:
+	docker compose -f docker-compose.dev.yml build
+
+docker-up-dev:
+	docker compose -f docker-compose.dev.yml up
+
+docker-down-dev:
+	docker compose -f docker-compose.dev.yml down
+
+# Docker Compose commands for production
+
+docker-build-prod:
+	docker compose -f docker-compose.prod.yml build
+
+docker-up-prod:
+	docker compose -f docker-compose.prod.yml up
+
+docker-down-prod:
+	docker compose -f docker-compose.prod.yml down
