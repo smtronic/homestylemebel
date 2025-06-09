@@ -53,12 +53,10 @@ Last updated: 2025-05-29
   - [x] `/admin/cart/cart/add/` — Add cart
   - [x] `/admin/cart/cart/<id>/change/` — Edit cart
   - [x] `/admin/cart/cart/<id>/delete/` — Delete cart
-  - [x] `/admin/cart/cart/<id>/history/` — View cart history
   - [x] `/admin/cart/cartitem/` — List cart items
   - [x] `/admin/cart/cartitem/add/` — Add cart item
   - [x] `/admin/cart/cartitem/<id>/change/` — Edit cart item
   - [x] `/admin/cart/cartitem/<id>/delete/` — Delete cart item
-  - [x] `/admin/cart/cartitem/<id>/history/` — View cart item history
 
 ### Tests
 
@@ -73,7 +71,7 @@ Last updated: 2025-05-29
 - [x] `database.md`
 - [x] `testing.md`
 - [x] OpenAPI schema with `drf-spectacular`
-- [ ] Auto-generated API docs (Swagger/OpenAPI UI)
+- [x] Auto-generated API docs (Swagger/OpenAPI UI)
 
 ---
 
@@ -83,34 +81,36 @@ Last updated: 2025-05-29
 
 ### Orders
 
-- [ ] Models: `Order`, `OrderItem`
-- [ ] Endpoints:
-  - [ ] `POST /api/v1/orders/` — Create order
+- [x] Models: `Order`, `OrderItem`
+- [x] Endpoints:
+  - [x] `POST /api/v1/orders/` — Create order
     - For guests: requires `full_name`, `phone`, `email`
     - For logged-in users: use profile data, but allow override
-  - [ ] For **authenticated users** only:
-    - [ ] `GET /api/v1/orders/` — List user's orders
-    - [ ] `GET /api/v1/orders/{id}/` — Order detail
+  - [x] For **authenticated users** only:
+    - [x] `GET /api/v1/orders/` — List user's orders
+    - [x] `GET /api/v1/orders/{id}/` — Order detail
+    - [x] `POST /api/v1/orders/{id}/cancel/` — Cancel order (admin only)
+    - [x] `PATCH /api/v1/orders/{id}/edit/` — Edit order contact info
 
 ### Business logic
 
 - [x] `OrderService`
-- [ ] Validation: stock check, empty cart check, duplicate prevention
+- [x] Validation: stock check, empty cart check, duplicate prevention
 
 ### Testing
 
-- [ ] Unit tests
-- [ ] Integration tests
-- [ ] Edge cases: stock issues, invalid user data
+- [x] Unit tests
+- [x] Integration tests
+- [x] Edge cases: stock issues, invalid user data
 
 ### Docs
 
-- [ ] Update `api.md`
-- [ ] Update `database.md`
+- [x] Update `api.md`
+- [x] Update `database.md`
 
 ---
 
-## 🔄 Phase 4: Authentication
+## ✅ Phase 4: Authentication
 
 **Goal:** Enable secure user authentication.
 
@@ -130,21 +130,17 @@ Last updated: 2025-05-29
 
 **Goal:** Enable detailed debugging and performance insights in the development environment.
 
-- [ ] Install **Django Debug Toolbar**:
-  - [ ] Install via `pip install django-debug-toolbar`
-  - [ ] Add `'debug_toolbar'` to `INSTALLED_APPS`
-  - [ ] Include `debug_toolbar.middleware.DebugToolbarMiddleware` in `MIDDLEWARE`
-  - [ ] Set `INTERNAL_IPS = ['127.0.0.1']` for local debugging
-- [ ] Usage:
-  - [ ] Provides detailed analysis of SQL queries, template rendering times, request/response cycle
-  - [ ] Highlights performance issues like N+1 queries
-  - [ ] Shows cache, signals, and other debug info
+- [x] Install **Django Debug Toolbar**
+- [x] Add `'debug_toolbar'` to `INSTALLED_APPS` in dev
+- [x] Include `debug_toolbar.middleware.DebugToolbarMiddleware` in `MIDDLEWARE` in dev
+- [x] Set `INTERNAL_IPS = ['127.0.0.1']` for local debugging
+- [x] Usage: SQL queries, template rendering, request/response cycle, N+1 queries, cache, signals, etc.
 
 ---
 
 ## 📌 Suggestions & Ideas
 
 - [x] Add `drf-spectacular` for OpenAPI schema
-- [ ] Add `drf-yasg` or Swagger UI for interactive API docs
+- [x] Swagger UI/Redoc for interactive API docs
 - [ ] Rate limiting / throttling (for heavy endpoints)
 - [ ] Review permissions (e.g., order access, admin-only features)

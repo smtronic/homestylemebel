@@ -138,3 +138,24 @@ make graph
 ```
 
 Uses `django-extensions` + `pygraphviz`.
+
+---
+
+## 🐳 Docker Workflow
+
+For local development and production, use the provided Makefile commands:
+
+- **Development:**
+  - `make docker-build-dev` — Build dev images
+  - `make docker-up-dev` — Run dev containers
+  - `make docker-down-dev` — Stop dev containers
+- **Production:**
+
+  - `make docker-build-prod` — Build prod images
+  - `make docker-up-prod` — Run prod containers
+  - `make docker-down-prod` — Stop prod containers
+
+- Uses `.env.dev` and `.env.prod` for environment variables
+- See `docker-compose.dev.yml` and `docker-compose.prod.yml` for details
+
+---

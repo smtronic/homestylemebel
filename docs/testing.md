@@ -62,14 +62,11 @@ We use the following plugins:
 
 ## ⚙️ Makefile Commands
 
-| Command         | Description                             |
-|----------------|-----------------------------------------|
-| `make install`  | Install production dependencies         |
-| `make install-dev` | Install development/testing tools   |
-| `make test`     | Run all tests                           |
-| `make coverage` | Run tests with code coverage report     |
-| `make lint`     | Check code formatting with `black`      |
-| `make format`   | Auto-format code using `black` + `isort`|
+| Command       | Description                              |
+| ------------- | ---------------------------------------- |
+| `make test`   | Run all tests                            |
+| `make lint`   | Check code formatting with `black`       |
+| `make format` | Auto-format code using `black` + `isort` |
 
 ---
 
