@@ -2,6 +2,8 @@ from .base import *
 
 DEBUG = False
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+STATIC_ROOT = "/app/static"
+MEDIA_ROOT = "/app/media"
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 3600

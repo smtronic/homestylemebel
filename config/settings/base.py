@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "apps.orders",
     "apps.cart",
     "rest_framework",
-    "django_extensions",
     "django_filters",
     "drf_spectacular",
 ]

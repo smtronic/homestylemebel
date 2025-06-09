@@ -7,6 +7,7 @@ CSRF_COOKIE_SECURE = False
 
 INSTALLED_APPS += [
     "debug_toolbar",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
