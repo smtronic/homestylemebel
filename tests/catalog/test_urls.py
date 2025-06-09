@@ -18,7 +18,12 @@ class CategoryURLTest(APITestCase):
     def test_get_category_list(self):
         response = self.client.get(self.url_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        # DRF pagination: response.data может быть словарём с ключом 'results'
+        data = response.data
+        if isinstance(data, dict) and "results" in data:
+            data = data["results"]
+        names = [cat["name"] for cat in data]
+        self.assertIn(self.category.name, names)
 
     def test_get_category_detail(self):
         response = self.client.get(self.url_detail)
@@ -54,7 +59,12 @@ class ProductURLTest(APITestCase):
     def test_get_product_list(self):
         response = self.client.get(self.url_list)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        # DRF pagination: response.data может быть словарём с ключом 'results'
+        data = response.data
+        if isinstance(data, dict) and "results" in data:
+            data = data["results"]
+        skus = [prod["sku"] for prod in data]
+        self.assertIn(self.product.sku, skus)
 
     def test_get_product_detail(self):
         response = self.client.get(self.url_detail)

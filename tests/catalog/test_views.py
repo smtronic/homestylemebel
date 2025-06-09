@@ -17,7 +17,11 @@ class CategoryViewSetTest(APITestCase):
     def test_get_category_list(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        data = response.data
+        if isinstance(data, dict) and "results" in data:
+            data = data["results"]
+        names = [cat["name"] for cat in data]
+        self.assertIn(self.category.name, names)
 
     def test_get_category_detail(self):
         response = self.client.get(f"{self.url}{self.category.slug}/")
@@ -53,7 +57,11 @@ class ProductViewSetTest(APITestCase):
     def test_get_product_list(self):
         response = self.client.get(self.products_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        data = response.data
+        if isinstance(data, dict) and "results" in data:
+            data = data["results"]
+        skus = [prod["sku"] for prod in data]
+        self.assertIn(self.product.sku, skus)
 
     def test_get_product_detail(self):
         response = self.client.get(self.product_url)

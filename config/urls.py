@@ -30,7 +30,6 @@ urlpatterns = [
     ),
 ]
 
-# Статика и медиафайлы
 if settings.DEBUG:
     import debug_toolbar
 
