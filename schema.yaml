@@ -134,9 +134,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Cart'
           description: ''
-  /api/v1/categories/:
+  /api/v1/catalog/categories/:
     get:
-      operationId: categories_list
+      operationId: catalog_categories_list
       parameters:
       - name: ordering
         required: false
@@ -151,7 +151,7 @@ paths:
         schema:
           type: string
       tags:
-      - categories
+      - catalog
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -165,9 +165,9 @@ paths:
                   $ref: '#/components/schemas/Category'
           description: ''
     post:
-      operationId: categories_create
+      operationId: catalog_categories_create
       tags:
-      - categories
+      - catalog
       requestBody:
         content:
           application/json:
@@ -190,9 +190,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Category'
           description: ''
-  /api/v1/categories/{slug}/:
+  /api/v1/catalog/categories/{slug}/:
     get:
-      operationId: categories_retrieve
+      operationId: catalog_categories_retrieve
       parameters:
       - in: path
         name: slug
@@ -200,7 +200,7 @@ paths:
           type: string
         required: true
       tags:
-      - categories
+      - catalog
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -212,7 +212,7 @@ paths:
                 $ref: '#/components/schemas/Category'
           description: ''
     put:
-      operationId: categories_update
+      operationId: catalog_categories_update
       parameters:
       - in: path
         name: slug
@@ -220,7 +220,7 @@ paths:
           type: string
         required: true
       tags:
-      - categories
+      - catalog
       requestBody:
         content:
           application/json:
@@ -244,7 +244,7 @@ paths:
                 $ref: '#/components/schemas/Category'
           description: ''
     patch:
-      operationId: categories_partial_update
+      operationId: catalog_categories_partial_update
       parameters:
       - in: path
         name: slug
@@ -252,7 +252,7 @@ paths:
           type: string
         required: true
       tags:
-      - categories
+      - catalog
       requestBody:
         content:
           application/json:
@@ -275,7 +275,7 @@ paths:
                 $ref: '#/components/schemas/Category'
           description: ''
     delete:
-      operationId: categories_destroy
+      operationId: catalog_categories_destroy
       parameters:
       - in: path
         name: slug
@@ -283,7 +283,183 @@ paths:
           type: string
         required: true
       tags:
-      - categories
+      - catalog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/catalog/products/:
+    get:
+      operationId: catalog_products_list
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: string
+        description: Категория
+      - in: query
+        name: in_stock
+        schema:
+          type: boolean
+        description: В наличии
+      - in: query
+        name: max_price
+        schema:
+          type: number
+        description: Цена до
+      - in: query
+        name: min_price
+        schema:
+          type: number
+        description: Цена от
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - catalog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductList'
+          description: ''
+    post:
+      operationId: catalog_products_create
+      tags:
+      - catalog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreateUpdate'
+          description: ''
+  /api/v1/catalog/products/{slug}/:
+    get:
+      operationId: catalog_products_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - catalog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+          description: ''
+    put:
+      operationId: catalog_products_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - catalog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductCreateUpdate'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreateUpdate'
+          description: ''
+    patch:
+      operationId: catalog_products_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - catalog
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductCreateUpdate'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreateUpdate'
+          description: ''
+    delete:
+      operationId: catalog_products_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - catalog
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -451,182 +627,6 @@ paths:
           description: Нет доступа
         '404':
           description: Заказ не найден
-  /api/v1/products/:
-    get:
-      operationId: products_list
-      parameters:
-      - in: query
-        name: category
-        schema:
-          type: string
-        description: Категория
-      - in: query
-        name: in_stock
-        schema:
-          type: boolean
-        description: В наличии
-      - in: query
-        name: max_price
-        schema:
-          type: number
-        description: Цена до
-      - in: query
-        name: min_price
-        schema:
-          type: number
-        description: Цена от
-      - name: ordering
-        required: false
-        in: query
-        description: Which field to use when ordering the results.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      tags:
-      - products
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProductList'
-          description: ''
-    post:
-      operationId: products_create
-      tags:
-      - products
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductCreateUpdate'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ProductCreateUpdate'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ProductCreateUpdate'
-        required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductCreateUpdate'
-          description: ''
-  /api/v1/products/{slug}/:
-    get:
-      operationId: products_retrieve
-      parameters:
-      - in: path
-        name: slug
-        schema:
-          type: string
-        required: true
-      tags:
-      - products
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductDetail'
-          description: ''
-    put:
-      operationId: products_update
-      parameters:
-      - in: path
-        name: slug
-        schema:
-          type: string
-        required: true
-      tags:
-      - products
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductCreateUpdate'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ProductCreateUpdate'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ProductCreateUpdate'
-        required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductCreateUpdate'
-          description: ''
-    patch:
-      operationId: products_partial_update
-      parameters:
-      - in: path
-        name: slug
-        schema:
-          type: string
-        required: true
-      tags:
-      - products
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedProductCreateUpdate'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedProductCreateUpdate'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedProductCreateUpdate'
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductCreateUpdate'
-          description: ''
-    delete:
-      operationId: products_destroy
-      parameters:
-      - in: path
-        name: slug
-        schema:
-          type: string
-        required: true
-      tags:
-      - products
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
 components:
   schemas:
     AddToCart:
