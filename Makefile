@@ -1,4 +1,4 @@
-include .env
+-include .env
 export
 
 .PHONY: install install-dev test coverage lint format run graph dump-sql restore-sql dump restore spectacular_upgrade docker-build-dev docker-up-dev docker-down-dev docker-build-prod docker-up-prod docker-down-prod
