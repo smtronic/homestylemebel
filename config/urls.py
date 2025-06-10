@@ -7,7 +7,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-
+from django.views.generic import TemplateView
 
 urlpatterns = [
     # Админка
@@ -35,5 +35,10 @@ if settings.DEBUG:
 
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
+        path(
+            "api/v1/",
+            TemplateView.as_view(template_name="api_index.html"),
+            name="api-index",
+        ),
     ] + urlpatterns
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
