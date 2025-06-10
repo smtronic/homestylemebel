@@ -4,10 +4,12 @@ from rest_framework import filters, viewsets
 from apps.catalog.filters import ProductFilter
 from apps.catalog.models import Category, Product
 from apps.catalog.permissions import IsAdminOrReadOnly
-from apps.catalog.serializers import (CategorySerializer,
-                                      ProductCreateUpdateSerializer,
-                                      ProductDetailSerializer,
-                                      ProductListSerializer)
+from apps.catalog.serializers import (
+    CategorySerializer,
+    ProductCreateUpdateSerializer,
+    ProductDetailSerializer,
+    ProductListSerializer,
+)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

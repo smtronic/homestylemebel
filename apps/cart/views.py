@@ -1,8 +1,7 @@
 from uuid import UUID
 
 from django.core.exceptions import ValidationError as DjangoValidationError
-from drf_spectacular.utils import (OpenApiParameter, extend_schema,
-                                   extend_schema_view)
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError as DRFValidationError
@@ -11,8 +10,12 @@ from rest_framework.response import Response
 from apps.cart.cart_services import CartService
 from apps.cart.models import Cart
 from apps.cart.permissions import IsCartAccessAllowed
-from apps.cart.serializers import (AddToCartSerializer, CartItemSerializer,
-                                   CartItemUpdateSerializer, CartSerializer)
+from apps.cart.serializers import (
+    AddToCartSerializer,
+    CartItemSerializer,
+    CartItemUpdateSerializer,
+    CartSerializer,
+)
 
 
 @extend_schema_view(

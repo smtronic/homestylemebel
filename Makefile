@@ -21,7 +21,7 @@ coverage:
 
 # 🧹 Lint the codebase with flake8, black, and isort
 lint:
-	flake8 apps tests
+	flake8 --max-line-length=120 --exclude=*/migrations/* apps tests
 	isort --check-only apps tests
 	black --check apps tests
 

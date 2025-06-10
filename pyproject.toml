@@ -1,0 +1,19 @@
+[tool.black]
+line-length = 88
+target-version = ['py312']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.flake8]
+max-line-length = 120
+exclude = ["*/migrations/*"]
+per-file-ignores = [
+    "*/migrations/*.py:E501,E402,F401,F403,F405,F811,F821,F841"
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.dev"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+testpaths = ["tests"]

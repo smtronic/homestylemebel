@@ -1,7 +1,6 @@
 import logging
 from decimal import Decimal
 
-from django.core.exceptions import ValidationError
 from django.db import models
 from pytils.translit import slugify
 

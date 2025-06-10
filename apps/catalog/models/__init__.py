@@ -1,3 +1,3 @@
-from .base import BaseModel
-from .category import Category
-from .product import Product, ProductExtraImage
+from .base import BaseModel  # noqa: F401
+from .category import Category  # noqa: F401
+from .product import Product, ProductExtraImage  # noqa: F401

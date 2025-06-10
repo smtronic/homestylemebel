@@ -1,8 +1,4 @@
-from uuid import UUID
-
-from drf_spectacular.utils import (OpenApiParameter, OpenApiResponse,
-                                   OpenApiTypes, extend_schema,
-                                   extend_schema_view)
+from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -10,8 +6,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from apps.orders.models import Order
-from apps.orders.serializers import (OrderCreateSerializer, OrderSerializer,
-                                     OrderUpdateSerializer)
+from apps.orders.serializers import (
+    OrderCreateSerializer,
+    OrderSerializer,
+    OrderUpdateSerializer,
+)
 from apps.orders.services.order_services import OrderService
 
 

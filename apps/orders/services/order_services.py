@@ -22,7 +22,7 @@ class OrderService:
             email=contact_data.get("email"),
             status=Order.Status.NEW,
         )
-        order_items = OrderItem.objects.bulk_create_from_cart(
+        OrderItem.objects.bulk_create_from_cart(
             order, cart.items.select_related("product")
         )
 

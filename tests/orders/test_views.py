@@ -1,7 +1,6 @@
 import pytest
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
 
 from apps.cart.models import Cart, CartItem
 from apps.orders.models import Order
@@ -59,7 +58,7 @@ class TestOrderViewSet:
     def test_list_orders(self, client, user, product):
         client.force_login(user)
         cart = Cart.objects.create(user=user)
-        item = CartItem.objects.create(cart=cart, product=product, quantity=1)
+        CartItem.objects.create(cart=cart, product=product, quantity=1)
 
         # Создание заказа через сервис
         from apps.orders.services.order_services import OrderService
@@ -83,7 +82,7 @@ class TestOrderViewSet:
         user.save()
         client.force_login(user)
         cart = Cart.objects.create(user=user)
-        item = CartItem.objects.create(cart=cart, product=product, quantity=1)
+        CartItem.objects.create(cart=cart, product=product, quantity=1)
 
         from apps.orders.services.order_services import OrderService
 
