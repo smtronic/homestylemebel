@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: install install-dev test coverage lint format run graph dump-sql restore-sql dump restore spectacular_upgrade docker-build-dev docker-up-dev docker-down-dev docker-build-prod docker-up-prod docker-down-prod
+.PHONY: install install-dev test coverage lint format graph dump-sql restore-sql dump restore spectacular_upgrade docker-build-dev docker-up-dev docker-down-dev docker-build-prod docker-up-prod docker-down-prod
 
 # 📦 Install production dependencies
 install:
@@ -22,17 +22,13 @@ coverage:
 # 🧹 Lint the codebase with flake8, black, and isort
 lint:
 	flake8 apps tests
-	black --check apps tests
 	isort --check-only apps tests
+	black --check apps tests
 
 # 🧼 Auto-format the code using black and isort
 format:
-	black apps tests
 	isort apps tests
-
-# 🚀 Run the development server
-run:
-	python manage.py runserver
+	black apps tests
 
 # 🧠 Generate ER diagram of the models
 # graph:

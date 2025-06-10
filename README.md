@@ -25,6 +25,7 @@ homestylemebel/
 ## 🔍 Key Features
 
 ### 📚 Catalog
+
 - SEO-friendly slug URLs
 - Dynamic price calculation (discounts)
 - Stock and availability tracking
@@ -33,6 +34,7 @@ homestylemebel/
 - Admin: category & product management
 
 ### 🛒 Cart
+
 - Guest cart via `session_key`, user cart via FK
 - Quantity validation by stock
 - Total price calculation
@@ -40,6 +42,7 @@ homestylemebel/
 - Auto-merge logic (planned)
 
 ### 📦 Orders
+
 - Create order from cart (with validation)
 - Full stock deduction and rollback
 - Statuses: `new`, `processing`, `completed`, `cancelled`
@@ -47,12 +50,14 @@ homestylemebel/
 - Admin: order management, cancel, edit
 
 ### 🔐 Authentication & Security
+
 - JWT auth (register, login, refresh, verify)
 - User profile endpoints
 - Permissions for admin/user actions
 - Security hardening: password policy, rate limiting, 2FA (roadmap)
 
 ### 🐳 Docker & DevOps
+
 - Docker Compose for dev/prod
 - Separate Dockerfiles for dev/prod
 - .env.dev / .env.prod for environment separation
@@ -60,6 +65,7 @@ homestylemebel/
 - Nginx as static/media proxy in prod
 
 ### 🧪 Testing & CI
+
 - Pytest, pytest-django, coverage
 - GitHub Actions: tests, lint, coverage on every push
 - Factory Boy for fixtures
@@ -69,31 +75,38 @@ homestylemebel/
 ## 🚀 Getting Started
 
 ### 1. Clone the repo
+
 ```bash
 git clone git@github.com:yourusername/homestylemebel.git
 cd homestylemebel
 ```
 
 ### 2. Local development (venv)
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-make install-dev
+pip install -r requirements/dev.txt
 cp .env.example .env
-django-admin migrate
-make run
+python manage.py migrate
+python manage.py runserver
 ```
+
 Visit: [http://localhost:8000](http://localhost:8000)
 
 ### 3. Dockerized development
+
 ```bash
+cp .env.dev.example .env.dev
 make docker-build-dev   # Build dev images
 make docker-up-dev      # Run dev containers
 make docker-down-dev    # Stop dev containers
 ```
 
 ### 4. Dockerized production
+
 ```bash
+cp .env.prod.example .env.prod
 make docker-build-prod  # Build prod images
 make docker-up-prod     # Run prod containers
 make docker-down-prod   # Stop prod containers
@@ -118,16 +131,16 @@ open htmlcov/index.html  # View coverage report
 
 Implemented endpoints (see [docs/api.md](./docs/api.md) for full details):
 
-| Method | Endpoint                        | Description               |
-| ------ | ------------------------------- | ------------------------- |
-| GET    | `/api/v1/catalog/categories/`   | List all categories       |
-| GET    | `/api/v1/catalog/products/`     | Product list with filters |
-| POST   | `/api/v1/carts/add/`            | Add item to cart          |
-| PATCH  | `/api/v1/carts/{id}/update/`    | Update cart item qty      |
-| DELETE | `/api/v1/carts/{id}/remove/`    | Remove item from cart     |
-| GET    | `/api/v1/orders/`               | List user orders          |
-| POST   | `/api/v1/orders/`               | Create order from cart    |
-| ...    | ...                             | ...                       |
+| Method | Endpoint                      | Description               |
+| ------ | ----------------------------- | ------------------------- |
+| GET    | `/api/v1/catalog/categories/` | List all categories       |
+| GET    | `/api/v1/catalog/products/`   | Product list with filters |
+| POST   | `/api/v1/carts/add/`          | Add item to cart          |
+| PATCH  | `/api/v1/carts/{id}/update/`  | Update cart item qty      |
+| DELETE | `/api/v1/carts/{id}/remove/`  | Remove item from cart     |
+| GET    | `/api/v1/orders/`             | List user orders          |
+| POST   | `/api/v1/orders/`             | Create order from cart    |
+| ...    | ...                           | ...                       |
 
 - Full OpenAPI docs: `/api/v1/schema/swagger-ui/` and `/api/v1/schema/redoc/`
 
@@ -135,26 +148,27 @@ Implemented endpoints (see [docs/api.md](./docs/api.md) for full details):
 
 ## 🛠 Makefile & Docker Commands
 
-| Command                | Description                      |
-|------------------------|----------------------------------|
-| `make run`             | Run Django dev server            |
-| `make test`            | Run tests with Pytest            |
-| `make coverage`        | Run tests + coverage             |
-| `make lint`            | Check formatting and lint errors |
-| `make format`          | Auto-format with black, isort    |
-| `make graph`           | Generate ER diagram              |
-| `make dump`            | Dump DB (compressed)             |
-| `make restore`         | Restore DB from dump             |
-| `make docker-build-dev`| Build dev Docker images          |
-| `make docker-up-dev`   | Run dev Docker containers        |
-| `make docker-down-dev` | Stop dev Docker containers       |
-| `make docker-build-prod`| Build prod Docker images         |
-| `make docker-up-prod`  | Run prod Docker containers       |
-| `make docker-down-prod`| Stop prod Docker containers      |
+| Command                  | Description                      |
+| ------------------------ | -------------------------------- |
+| `make run`               | Run Django dev server            |
+| `make test`              | Run tests with Pytest            |
+| `make coverage`          | Run tests + coverage             |
+| `make lint`              | Check formatting and lint errors |
+| `make format`            | Auto-format with black, isort    |
+| `make graph`             | Generate ER diagram              |
+| `make dump`              | Dump DB (compressed)             |
+| `make restore`           | Restore DB from dump             |
+| `make docker-build-dev`  | Build dev Docker images          |
+| `make docker-up-dev`     | Run dev Docker containers        |
+| `make docker-down-dev`   | Stop dev Docker containers       |
+| `make docker-build-prod` | Build prod Docker images         |
+| `make docker-up-prod`    | Run prod Docker containers       |
+| `make docker-down-prod`  | Stop prod Docker containers      |
 
 ---
 
 ## 🔁 CI/CD
+
 - **GitHub Actions:** tests, lint, coverage on push/PR
 - PostgreSQL service in pipeline
 - Planned: Docker build, coverage badge, auto-deploy
@@ -162,6 +176,7 @@ Implemented endpoints (see [docs/api.md](./docs/api.md) for full details):
 ---
 
 ## 📚 Documentation
+
 - [API Reference](./docs/api.md)
 - [Architecture Overview](./docs/architecture.md)
 - [Database Schema](./docs/database.md)
@@ -173,7 +188,9 @@ Implemented endpoints (see [docs/api.md](./docs/api.md) for full details):
 ---
 
 ## 🧊 Commit Style
+
 Use Conventional Commits:
+
 - `feat(catalog): add product filtering by price`
 - `fix(cart): fix bug with quantity validation`
 - `chore: add Makefile commands for backup`
@@ -181,6 +198,7 @@ Use Conventional Commits:
 ---
 
 ## 🤝 Contributing
+
 - Branch naming: `feature/*`, `fix/*`, `chore/*`
 - Base branch for PRs: `develop`
 - Write tests and docs for your changes
@@ -189,6 +207,7 @@ Use Conventional Commits:
 ---
 
 ## 📧 Contact
+
 - Email: aasmolnikov@gmail.com
 - GitHub: [@smtronic](https://github.com/smtronic)
 - Telegram: [@smtronic](https://t.me/smtronic)
