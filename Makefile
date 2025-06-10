@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: install install-dev test coverage lint format graph dump-sql restore-sql dump restore spectacular_upgrade docker-build-dev docker-up-dev docker-down-dev docker-build-prod docker-up-prod docker-down-prod
+.PHONY: install install-dev test coverage lint format graph dump-sql restore-sql dump restore spectacular_upgrade docker-build-dev docker-up-dev docker-down-dev docker-build-prod docker-up-prod docker-down-prod seed clear
 
 # 📦 Install production dependencies
 install:
@@ -58,6 +58,14 @@ dump: backup-dir
 # Restore from compressed custom-format dump
 restore:
 	gunzip -c backup/backup.dump.gz | pg_restore -U $(DB_USER) -d $(DB_NAME)
+
+# 🧪 Seed database with demo data
+seed:
+	python manage.py seed_data
+
+# 🧹 Очистить тестовые данные из базы
+clear:
+	python manage.py clear_data
 
 spectacular_upgrade:
 	python manage.py spectacular --file schema.yaml

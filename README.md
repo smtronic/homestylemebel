@@ -115,6 +115,32 @@ make docker-down-prod   # Stop prod containers
 - Dev: uses `.env.dev`, `docker-compose.dev.yml`, auto-creates superuser
 - Prod: uses `.env.prod`, `docker-compose.prod.yml`, nginx for static/media
 
+### 5. Seed test data (optional)
+
+Для наполнения базы демонстрационными данными выполните:
+
+```bash
+make seed
+```
+
+Это создаст пользователей, категории, товары, корзины и заказы для быстрого просмотра API.
+
+### 6. Database initialization via Docker (SQL dump)
+
+If you want to pre-populate the database with test or initial data on the first run of the Postgres container:
+
+1. Place your SQL dump (e.g., `backup.sql`) in the `init_db/` folder at the project root.
+2. In `docker-compose.dev.yml`, the volume is already configured:
+   ```yaml
+   volumes:
+     - ./init_db:/docker-entrypoint-initdb.d
+   ```
+3. On the first run, the Postgres container will automatically execute all .sql files from this folder (only if the database is not yet initialized).
+
+> ⚠️ If the database volume already exists, the dump will not be applied again. To reinitialize, remove the volume: `docker volume rm homestylemebel_pgdata` (or similar).
+
+- This is convenient for quickly starting the dev environment with ready-to-use test data.
+
 ---
 
 ## 🧪 Testing
@@ -164,6 +190,30 @@ Implemented endpoints (see [docs/api.md](./docs/api.md) for full details):
 | `make docker-build-prod` | Build prod Docker images         |
 | `make docker-up-prod`    | Run prod Docker containers       |
 | `make docker-down-prod`  | Stop prod Docker containers      |
+
+---
+
+## 🧹 Database cleanup (optional)
+
+To remove all test/demo data from the database (except the superuser), run:
+
+```bash
+make clear
+```
+
+This will delete all users (except the superuser), categories, products, carts, orders, and related items.
+
+---
+
+## 🗂 API Index Page (DEV only)
+
+When `DEBUG=True`, you can access a developer-friendly API index at:
+
+```
+http://localhost:8000/api/v1/
+```
+
+This page contains links to all main API endpoints and documentation (Swagger, Redoc) for quick navigation during development.
 
 ---
 
