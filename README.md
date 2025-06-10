@@ -77,15 +77,18 @@ homestylemebel/
 ### 1. Clone the repo
 
 ```bash
-git clone git@github.com:yourusername/homestylemebel.git
+git clone https://github.com/smtronic/homestylemebel
 cd homestylemebel
 ```
 
 ### 2. Local development (venv)
 
+> Requires **Python 3.12**
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements/dev.txt
 cp .env.example .env
 python manage.py migrate
@@ -117,13 +120,13 @@ make docker-down-prod   # Stop prod containers
 
 ### 5. Seed test data (optional)
 
-Для наполнения базы демонстрационными данными выполните:
+To populate the database with demo data, run:
 
 ```bash
 make seed
 ```
 
-Это создаст пользователей, категории, товары, корзины и заказы для быстрого просмотра API.
+This will create users, categories, products, carts, and orders for quick API exploration.
 
 ### 6. Database initialization via Docker (SQL dump)
 
